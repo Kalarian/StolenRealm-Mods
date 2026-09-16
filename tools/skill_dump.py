@@ -430,8 +430,11 @@ def render_action(p, depth, seen, owner, prefix=""):
     conds += [c["condition"] for c in d.get("UseConditions", []) or [] if c.get("condition")]
     if conds:
         lines.append(ind(depth + 1, "usable only if [%s]" % "] and [".join(simp(c) for c in conds)))
+    one_of = d.get("ChoseOnlyOneStatusFromList") and len(d.get("StatusEffects", [])) > 1
+    if one_of:
+        lines.append(ind(depth + 1, "applies ONE of these at random (equal odds, %d outcomes):" % len(d["StatusEffects"])))
     for q, n in grouped(pid(x) for x in d.get("StatusEffects", [])):
-        lines += render_status(q, depth + 1, seen, owner, prefix="applies%s: " % (" x%d" % n if n > 1 else ""))
+        lines += render_status(q, depth + (2 if one_of else 1), seen, owner, prefix=("" if one_of else "applies: ") + (("x%d " % n) if n > 1 else ""))
     for q, n in grouped(pid(x) for x in d.get("SourceStatusEffects", [])):
         lines += render_status(q, depth + 1, seen, owner, prefix="applies to self%s: " % (" x%d" % n if n > 1 else ""))
     for so in d.get("StatusEffectOverrides", []) or []:
