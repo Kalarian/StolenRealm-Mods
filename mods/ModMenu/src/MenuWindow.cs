@@ -21,7 +21,7 @@ namespace ModMenu
     internal static class MenuWindow
     {
         private const string MenuFlag = "stolenrealm.mods.menu";
-        private const float PanelWidth = 620f, RowHeight = 34f, HeaderHeight = 124f, FooterHeight = 152f, ListHeight = 245f; // 2026-09-16: window +40%, list +20%
+        private const float PanelWidth = 620f, RowHeight = 34f, HeaderHeight = 100f, FooterHeight = 96f, ListHeight = 325f; // 2026-09-16: window 521 tall, the list takes all but the title block and the hint + buttons
         private const string SelfName = "ModMenu";      // never listed: the menu cannot switch itself off (edit stolenrealm.mods.cfg by hand)
         private static ScrollRect _scroll;
 
@@ -152,9 +152,9 @@ namespace ModMenu
 
             // title + subtitle
             TextMeshProUGUI title = MakeText(prt, "Title", "Stolen Realm Mods", _fontTitle, 20, new Color32(0xCB, 0xB3, 0x96, 0xFF), TextAlignmentOptions.Center);
-            Place(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, -24f), new Vector2(0f, -58f));
+            Place(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, -48f), new Vector2(0f, -16f));
             TextMeshProUGUI sub = MakeText(prt, "Subtitle", "Tick the mods you want, then Apply. Changes take effect immediately; nothing is undone that a mod already did.", _fontBody, 11, new Color32(0x9A, 0xA5, 0xB1, 0xFF), TextAlignmentOptions.Center);
-            Place(sub.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20f, -66f), new Vector2(-20f, -112f));
+            Place(sub.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20f, -94f), new Vector2(-20f, -52f));
 
             // rows: a masked, scrolling list ListHeight tall
             var viewportGo = new GameObject("Viewport", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(RectMask2D), typeof(ScrollRect));
@@ -188,12 +188,12 @@ namespace ModMenu
 
             // footer: hint + buttons
             TextMeshProUGUI hint = MakeText(prt, "Hint", "This window itself has no box: to turn the mod menu off, edit BepInEx\\config\\stolenrealm.mods.cfg by hand.", _fontBody, 11, new Color32(0x9A, 0xA5, 0xB1, 0xFF), TextAlignmentOptions.Center);
-            Place(hint.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(20f, 90f), new Vector2(-20f, 130f));
+            Place(hint.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(20f, 64f), new Vector2(-20f, 90f));
             Button apply = MakeButton(prt, "Apply", () => Apply());
             Button cancel = MakeButton(prt, "Cancel", () => Close(false));
             RectTransform art = apply.GetComponent<RectTransform>(), crt = cancel.GetComponent<RectTransform>();
-            art.anchorMin = art.anchorMax = new Vector2(0.5f, 0f); art.pivot = new Vector2(0.5f, 0f); art.anchoredPosition = new Vector2(-110f, 30f);
-            crt.anchorMin = crt.anchorMax = new Vector2(0.5f, 0f); crt.pivot = new Vector2(0.5f, 0f); crt.anchoredPosition = new Vector2(110f, 30f);
+            art.anchorMin = art.anchorMax = new Vector2(0.5f, 0f); art.pivot = new Vector2(0.5f, 0f); art.anchoredPosition = new Vector2(-110f, 16f);
+            crt.anchorMin = crt.anchorMax = new Vector2(0.5f, 0f); crt.pivot = new Vector2(0.5f, 0f); crt.anchoredPosition = new Vector2(110f, 16f);
 
             _root.SetActive(false);
             if (Cfg.Verbose.Value) ModMenuPlugin.Log.LogInfo("Mod menu built under " + parent.name + " (" + rows + " rows)");
