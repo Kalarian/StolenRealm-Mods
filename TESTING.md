@@ -226,11 +226,12 @@ Test1..Test6 were generated with an EMPTY quest list, so they are the perfect te
 
 ## ModMenu (F9 window) [REG]
 - [x] Startup log: `Loading [ModMenu 1.0.0]`, `Patched 0 methods`, every plugin says `Master config: 17/17 mods enabled`.
-- [x] In town press **F9**: a centred window "Stolen Realm Mods" with one checkbox row per mod (17) and "Verbose logging (all mods)", Apply and Cancel. Game input behind it is blocked. Escape or F9 closes it without changes; Cancel too.
+- [x] In town press **F9**: a centred window "Stolen Realm Mods" with one checkbox row per mod except the menu itself (16) and "Verbose logging (all mods)", Apply and Cancel. Game input behind it is blocked. Escape or F9 closes it without changes; Cancel too.
 - [x] Untick TargetTooltip, Apply: window closes, every plugin logs `Config reloaded (16/17 mods enabled ...)`, TargetTooltip logs `patches removed`; in battle no mod tooltip on hover. F9, tick, Apply: `Patched 3 methods`, tooltip back. Same with ThreatOverlay (Alt) and AutoSalvage.
 - [x] Untick Verbose logging, Apply: each plugin logs `VerboseLogging = False`; tick, Apply: back to True.
 - [x] Edit a per-mod cfg in Notepad, F9, Apply with no box changed: the edit is picked up (`Config reloaded` lines, "(no mod changed; configs re-read)" in the ModMenu line).
 - [x] `stolenrealm.mods.cfg` after Apply still has the header comments, one line per mod and the VerboseLogging line.
+- [x] **[NEW]** (2026-09-16) The window is about 40% taller than before, the list about 20% taller, a grey hint above the buttons says the menu has no box of its own; no "Mod menu" row anywhere in the list; Apply keeps `ModMenu = true` in the file.
 - [x] Set `ModMenu = false` in the file with Notepad, F9: no window, plugins reload directly like before. Set true, F9: window back.
 - [x] Typing F9 into chat, the Fortune search or inventory search: no window opens.
 - [x] Main menu (no character loaded): F9 either opens the window (Escape closes) or logs "no UI container found yet"; no error.

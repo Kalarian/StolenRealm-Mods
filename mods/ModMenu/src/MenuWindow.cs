@@ -21,8 +21,8 @@ namespace ModMenu
     internal static class MenuWindow
     {
         private const string MenuFlag = "stolenrealm.mods.menu";
-        private const float PanelWidth = 620f, RowHeight = 34f, HeaderHeight = 96f, FooterHeight = 72f;
-        private const int VisibleRows = 6;              // the list scrolls beyond this
+        private const float PanelWidth = 620f, RowHeight = 34f, HeaderHeight = 124f, FooterHeight = 152f, ListHeight = 245f; // 2026-09-16: window +40%, list +20%
+        private const string SelfName = "ModMenu";      // never listed: the menu cannot switch itself off (edit stolenrealm.mods.cfg by hand)
         private static ScrollRect _scroll;
 
         private static GameObject _root;          // backdrop (full container) that also eats clicks
@@ -101,7 +101,7 @@ namespace ModMenu
                 var turnedOn = new List<string>(); var turnedOff = new List<string>(); var restart = new List<string>();
                 foreach (string name in MasterConfig.AllPlugins)
                 {
-                    Toggle t; bool on = !_toggles.TryGetValue(name, out t) || t.isOn;
+                    Toggle t; bool on = _toggles.TryGetValue(name, out t) ? t.isOn : MasterConfig.Enabled(name); // no row (the menu itself): unchanged
                     states[name] = on;
                     bool was = MasterConfig.Enabled(name);
                     if (on != was) { (on ? turnedOn : turnedOff).Add(name); if (ModTable.Get(name).RestartRequired) restart.Add(ModTable.Get(name).Title); }
@@ -129,9 +129,8 @@ namespace ModMenu
             if (parent == null) { ModMenuPlugin.Log.LogWarning("Mod menu: no UI container found yet (open it once the game has loaded)"); return false; }
             try { if (ConfirmWindow.Instance != null) { _fontTitle = ConfirmWindow.Instance.Title; _fontBody = ConfirmWindow.Instance.Message; } } catch { }
 
-            int rows = MasterConfig.AllPlugins.Length + 1;
-            int shown = Math.Min(rows, VisibleRows);
-            float height = HeaderHeight + shown * RowHeight + FooterHeight;
+            int rows = MasterConfig.AllPlugins.Length; // every plugin but this one, plus the verbose row
+            float height = HeaderHeight + ListHeight + FooterHeight;
 
             _root = new GameObject("StolenRealmModMenu", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
             RectTransform rootRt = _root.GetComponent<RectTransform>();
@@ -153,15 +152,15 @@ namespace ModMenu
 
             // title + subtitle
             TextMeshProUGUI title = MakeText(prt, "Title", "Stolen Realm Mods", _fontTitle, 20, new Color32(0xCB, 0xB3, 0x96, 0xFF), TextAlignmentOptions.Center);
-            Place(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, -14f), new Vector2(0f, -46f));
+            Place(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, -24f), new Vector2(0f, -58f));
             TextMeshProUGUI sub = MakeText(prt, "Subtitle", "Tick the mods you want, then Apply. Changes take effect immediately; nothing is undone that a mod already did.", _fontBody, 11, new Color32(0x9A, 0xA5, 0xB1, 0xFF), TextAlignmentOptions.Center);
-            Place(sub.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20f, -50f), new Vector2(-20f, -88f));
+            Place(sub.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20f, -66f), new Vector2(-20f, -112f));
 
-            // rows: a masked, scrolling list showing VisibleRows at a time
+            // rows: a masked, scrolling list ListHeight tall
             var viewportGo = new GameObject("Viewport", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(RectMask2D), typeof(ScrollRect));
             RectTransform vp = viewportGo.GetComponent<RectTransform>();
             vp.SetParent(prt, false);
-            Place(vp, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(24f, -(HeaderHeight + shown * RowHeight)), new Vector2(-24f, -HeaderHeight));
+            Place(vp, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(24f, -(HeaderHeight + ListHeight)), new Vector2(-24f, -HeaderHeight));
             Image vpImg = viewportGo.GetComponent<Image>(); vpImg.color = new Color(0f, 0f, 0f, 0f); vpImg.raycastTarget = true; // catches the mouse wheel
             var holder = new GameObject("Rows", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter)).GetComponent<RectTransform>();
             holder.SetParent(vp, false);
@@ -178,6 +177,7 @@ namespace ModMenu
             _toggles.Clear();
             foreach (string name in MasterConfig.AllPlugins)
             {
+                if (name == SelfName) continue;
                 ModTable.Entry entry = ModTable.Get(name);
                 bool installed = IsInstalled(name);
                 string suffix = !installed ? "not installed" : entry.RestartRequired ? "restart required" : null;
@@ -186,12 +186,14 @@ namespace ModMenu
             }
             _verbose = MakeRow(holder, "Verbose logging (all mods)", Cfg.ShowDescriptions.Value ? "Detailed lines in BepInEx\\LogOutput.log. Keep on while we are still testing." : null, null, true);
 
-            // buttons
+            // footer: hint + buttons
+            TextMeshProUGUI hint = MakeText(prt, "Hint", "This window itself has no box: to turn the mod menu off, edit BepInEx\\config\\stolenrealm.mods.cfg by hand.", _fontBody, 11, new Color32(0x9A, 0xA5, 0xB1, 0xFF), TextAlignmentOptions.Center);
+            Place(hint.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(20f, 90f), new Vector2(-20f, 130f));
             Button apply = MakeButton(prt, "Apply", () => Apply());
             Button cancel = MakeButton(prt, "Cancel", () => Close(false));
             RectTransform art = apply.GetComponent<RectTransform>(), crt = cancel.GetComponent<RectTransform>();
-            art.anchorMin = art.anchorMax = new Vector2(0.5f, 0f); art.pivot = new Vector2(0.5f, 0f); art.anchoredPosition = new Vector2(-110f, 18f);
-            crt.anchorMin = crt.anchorMax = new Vector2(0.5f, 0f); crt.pivot = new Vector2(0.5f, 0f); crt.anchoredPosition = new Vector2(110f, 18f);
+            art.anchorMin = art.anchorMax = new Vector2(0.5f, 0f); art.pivot = new Vector2(0.5f, 0f); art.anchoredPosition = new Vector2(-110f, 30f);
+            crt.anchorMin = crt.anchorMax = new Vector2(0.5f, 0f); crt.pivot = new Vector2(0.5f, 0f); crt.anchoredPosition = new Vector2(110f, 30f);
 
             _root.SetActive(false);
             if (Cfg.Verbose.Value) ModMenuPlugin.Log.LogInfo("Mod menu built under " + parent.name + " (" + rows + " rows)");

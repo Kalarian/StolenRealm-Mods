@@ -27,7 +27,7 @@ namespace ModMenu
             { "ThreatOverlay", new Entry { Title = "Threat overlay", Description = "Hold Left Alt in battle: red where enemies can move next turn, orange where they can hit." } },
             { "SharedProgress", new Entry { Title = "Campaign progress shared", Description = "Every character has your most advanced character's quest map, act and shop level. Progress already granted stays if you switch this off." } },
             { "NumberFormat", new Entry { Title = "Thousands separators", Description = "Every number the game shows gets thousands separators: 12345 becomes 12,345." } },
-            { "ModMenu", new Entry { Title = "Mod menu (this window)", Description = "F9 opens this window. If it is off, F9 reloads the config files directly instead." } },
+            { "ModMenu", new Entry { Title = "Mod menu (this window)", Description = "F9 opens the mod window. Not listed in the window on purpose: switch it off only by hand in stolenrealm.mods.cfg (then F9 reloads the config files directly)." } },
         };
 
         public static Entry Get(string name)
