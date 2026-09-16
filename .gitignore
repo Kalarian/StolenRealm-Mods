@@ -1,0 +1,19 @@
+# Whitelist: only the mods, tools and docs are published. Game data, decompiled game code, save backups and
+# build output never leave this machine.
+*
+!.gitignore
+!VERSION
+!LICENSE
+!README.md
+!TESTING.md
+!mods/
+!mods/**
+!tools/
+!tools/**
+mods/**/bin/
+mods/**/obj/
+mods/StolenRealm-Mods-install.zip
+mods/share/*.exe
+mods/share/*.tmp.pdf
+mods/share/SHA256SUMS.txt
+mods/Installer/install-log.txt

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>BattleStats Test Plan</title>
+<style>
+  @page { size: Letter; margin: 0.4in 0.5in; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Calibri, Arial, sans-serif; color: #1f2430; margin: 0; font-size: 10pt; line-height: 1.3; }
+  h1 { font-size: 18pt; margin: 0 0 2px; color: #2b2f3a; }
+  h2 { font-size: 12pt; margin: 10px 0 4px; color: #8a4b1f; border-bottom: 2px solid #e5d2c0; padding-bottom: 2px; }
+  h3 { font-size: 10.5pt; margin: 8px 0 3px; color: #2b2f3a; }
+  p { margin: 4px 0 6px; }
+  ul, ol { margin: 2px 0 6px 18px; padding: 0; }
+  li { margin: 2px 0; }
+  .sub { color: #5a6270; margin: 0 0 8px; font-size: 10.5pt; }
+  .tag { color: #8a4b1f; margin: 0 0 6px; }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { vertical-align: top; padding: 3px 7px; border-bottom: 1px solid #e9e4dc; text-align: left; }
+  th { background: #f6f1ea; color: #2b2f3a; font-size: 9.5pt; }
+  td.t { width: 10%; white-space: nowrap; color: #5a6270; }
+  td.k { width: 30%; font-weight: 600; }
+  td.why { width: 60%; }
+  td.pts { white-space: nowrap; width: 8%; text-align: right; color: #5a6270; }
+  .box { background: #f6f1ea; border-left: 4px solid #c58a5a; padding: 6px 10px; margin: 6px 0 8px; }
+  .page { page-break-before: always; }
+  kbd { font-family: Consolas, monospace; background: #eceff3; border: 1px solid #c9d0da; border-radius: 4px; padding: 0 5px; font-size: 9.5pt; }
+  code { font-family: Consolas, monospace; font-size: 9pt; background: #f2f2f2; padding: 0 3px; }
+  .chk { font-family: Consolas, monospace; color: #8a4b1f; }
+  .small { font-size: 9pt; color: #5a6270; }
+</style>
+</head>
+<body>
+<h1>BattleStats Test Plan</h1>
+<p class="sub">One battle, six level-18 characters, every kind of damage the stats page should be able to explain. Phase 1 only records; nothing shows in game.</p>
+
+<h2>Purpose</h2>
+<p>The recorder tags every damage, healing and block credit with how it arrived: a direct hit, a status tick (poison, bleed, burn), a tile's on-enter effect, a tile ticking at the start of a turn, a tile firing as it is placed, thorns, or a summon. At the end of the fight it prints each character's totals next to the numbers the game's own stats page uses. The test has one question to answer: does the game already count ticks and tiles for the caster, or does it drop them? Everything else (crits, kills, overkill, biggest hit, per-skill totals) is checked on the way.</p>
+
+<h2>Setup</h2>
+<ol>
+  <li><b>Host the game yourself</b> and bring all six characters in your own party. Recording happens on the machine that resolves the battle, so a solo party of six on one PC is the ideal test. Friends can join later runs, but for this one keep it local.</li>
+  <li>Respec each character into the build on its page (respec is 250 gold per level, 4,500 each at level 18; the purse has plenty). Point totals are exactly 20, the level-18 allowance, and tier unlocks are satisfied in order.</li>
+  <li>Equip what the build says. Casters' damage comes from the weapon's damage number, so give each caster the hardest-hitting staff or wand you own.</li>
+  <li>Config: <code>stolenrealm.battlestats.cfg</code> ships with <code>LogEveryHit = true</code> and <code>WriteJson = true</code>. Leave them. Verbose logging for the whole mod set is already on.</li>
+  <li>Pick a fight with <b>many enemies and at least one elite or champion</b>, at or below level 18, any difficulty. A big open map is better than a corridor: the tiles need enemies walking through them. Torturous is fine and gives the enemies enough health to sit in poison for a few turns.</li>
+  <li>Play the fight following the turn script (page 8). Take your time; there is no timing element.</li>
+  <li>When the post-battle screen appears the summary is written. Then send <code>BepInEx\LogOutput.log</code> and the newest file in <code>BepInEx\BattleStats\</code>.</li>
+</ol>
+
+<h2>What each character covers</h2>
+<table>
+  <tr><th>Character</th><th>Build</th><th>Proves</th></tr>
+  <tr><td class="k">1. Bloom</td><td>Nature: poison tiles, thorns, summons</td><td>Poison ticks credited to the caster; Bad Bloom tile; Brambles; Thorns; a summon's damage; poison spreading (Contagion); healing tile.</td></tr>
+  <tr><td class="k">2. Ember</td><td>Fire: burning ground, burn ticks, fire thorns</td><td>Burning Ground turn-start ticks; Meteor's lingering fire; Rune of Exploding (tile placed); Immolate ticks; Fire Shield thorns; multi-target Fireball and Detonate.</td></tr>
+  <tr><td class="k">3. Chaplain</td><td>Light: heals, shields, heal tile</td><td>HEAL lines; healing done vs received; self-heal from Kindred Spirit; Shield of Light blocks; Holy Ground heal tile; Shield of Retribution exploding.</td></tr>
+  <tr><td class="k">4. Bonecaller</td><td>Shadow: summons, life steal, poison cloud, soul link</td><td>Three summons' damage routed to the master; life-steal healing; Poison Cloud tile; Soul Link duplicated damage; Haunt ticks.</td></tr>
+  <tr><td class="k">5. Juggernaut</td><td>Warrior: two-hander, cleaves, bleed, self-damage</td><td>Multi-target hits; Bleeding ticks; Double Edge self-damage; Blood Drinker life steal; Colossus splash damage; being hit for the Thorns tests.</td></tr>
+  <tr><td class="k">6. Cutthroat</td><td>Thief: crits, poison on hit, execute</td><td>CRIT lines; poison stacks from weapon hits; Deathblow kills and overkill; Smoke Bomb tile; max-damage Master Assassin.</td></tr>
+</table>
+
+<!-- ================= Build 1 ================= -->
+<div class="page">
+<h1>1. Bloom</h1>
+<p class="tag">Nature &middot; 20 points &middot; the "my numbers look low" build</p>
+<p><b>Gear:</b> highest-damage staff or wand; any armor. <b>Stats:</b> Might and Vitality. Poison ticks scale from the weapon, not from Intelligence.</p>
+<table>
+  <tr><th>Tier</th><th>Skill</th><th>Why it is in the test</th><th>Pts</th></tr>
+  <tr><td class="t">T1</td><td class="k">Entangle</td><td class="why">Direct physical hit plus 2 Poisoned stacks: a direct credit followed by ticks on later turns.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Faerie Swarm</td><td class="why">Physical damage every turn plus Bleeding: a second kind of status tick.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Thorns I</td><td class="why">Return Physical Damage: the "thorns" path when enemies hit Bloom.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Brambles</td><td class="why">Summoned barrier that hurts attackers: a summon and thorns at once.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Beast Master I</td><td class="why">Summon damage bonus (needed for T2 unlock anyway).</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Pack Hunter I</td><td class="why">Filler damage bonus.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">The Bad Bloom</td><td class="why"><b>The key skill.</b> A flower tile that applies 2 Poisoned stacks per turn to enemies in range. Every tick it causes must show as credited to Bloom.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Venomous Skin</td><td class="why">Cast on Juggernaut: attackers get poisoned. Tests whether poison applied through an ally's buff still credits Bloom.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Thorns II</td><td class="why">More thorns.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Living Armor</td><td class="why">Regeneration each turn: a healing tick (HEAL line every turn).</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Contagion</td><td class="why">Poison spreads to neighbours: spread ticks must also credit Bloom.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">The Good Bloom</td><td class="why">Healing tile: heals through a tile, the healing counterpart of Bad Bloom.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Nature Summoning II</td><td class="why">A real summon (stag, wolf or boar) whose hits should appear as Summon on Bloom.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T4</td><td class="k">Mass Entangle</td><td class="why">Multi-target direct hit plus 3 Poisoned stacks each.</td><td class="pts">2</td></tr>
+  <tr><td class="t">T4</td><td class="k">Circle of Life</td><td class="why">Blooms spawned on enemy death: tiles created by a trigger rather than a cast.</td><td class="pts">2</td></tr>
+  <tr><td class="t">T5</td><td class="k">Titan Bloom</td><td class="why">Buff tile; also confirms non-damage tiles produce no bogus HIT lines.</td><td class="pts">3</td></tr>
+</table>
+<div class="box"><b>Expected in the log:</b> <span class="chk">HIT ... [StatusTick: Poisoned]</span> and <span class="chk">[StatusTick: Bleeding]</span> credited to Bloom, <span class="chk">[GroundEnter | The Bad Bloom]</span> or <span class="chk">[TurnStart | ...]</span> when enemies stand in it, <span class="chk">[Returned]</span> when Bloom or the Brambles are hit, <span class="chk">[Summon]</span> for the animal, <span class="chk">HEAL ... [StatusTick: Living Armor]</span>. In the summary, Bloom's <span class="chk">damage</span> must equal the <span class="chk">GAME'S OWN TOTALS DamageDealt</span>. If it does not, the difference is what the game drops.</div>
+</div>
+
+<!-- ================= Build 2 ================= -->
+<div class="page">
+<h1>2. Ember</h1>
+<p class="tag">Fire &middot; 20 points &middot; burning ground and burn ticks</p>
+<p><b>Gear:</b> highest-damage staff or wand. <b>Stats:</b> Might and Vitality.</p>
+<table>
+  <tr><th>Tier</th><th>Skill</th><th>Why it is in the test</th><th>Pts</th></tr>
+  <tr><td class="t">T1</td><td class="k">Fireblast</td><td class="why">Single-target direct fire hit: the baseline.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Immolate</td><td class="why">Fire damage each turn: a burn status tick.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Fire Shield</td><td class="why">Attackers take fire damage: fire thorns (Returned path with a fire type).</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Hot Head I</td><td class="why">Damage bonus.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Fire Borne</td><td class="why">Filler.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Burning Reach</td><td class="why">Range, makes placing tiles easier.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Burning Ground</td><td class="why"><b>The key skill.</b> Enemies take fire damage each turn they stand in it. Ticks happen on Ember's turn start and must credit Ember.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Fireball</td><td class="why">Hits all targets in range: one HIT line per target expected.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Hot Head II</td><td class="why">Damage bonus.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Fire Starter</td><td class="why">Enemies start with Heat stacks; feeds Avatar of Flame.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Aura of Flame</td><td class="why">Continuous damage to enemies within 3 hexes: an aura tick, a path we have not classified yet. Note how it is labelled.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Rune of Exploding</td><td class="why">A tile that detonates a turn later: "tile placed" or "turn start", we want to see which.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Detonate</td><td class="why">Point-blank multi-target hit.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T4</td><td class="k">Meteor</td><td class="why">Direct blast plus lingering fire: one cast producing both a direct credit and tile ticks.</td><td class="pts">2</td></tr>
+  <tr><td class="t">T4</td><td class="k">Flash Fire</td><td class="why">Shorter cooldowns so everything gets cast at least twice.</td><td class="pts">2</td></tr>
+  <tr><td class="t">T5</td><td class="k">Avatar of Flame</td><td class="why">Each Heat stack deals fire damage per turn: a passive-driven tick with no cast behind it. Where does the game credit it?</td><td class="pts">3</td></tr>
+</table>
+<div class="box"><b>Expected in the log:</b> <span class="chk">[TurnStart | Burning Ground]</span> ticks at the start of Ember's turns, <span class="chk">[StatusTick: Immolate]</span>, <span class="chk">[Returned]</span> when Ember is hit in melee, several <span class="chk">HIT</span> lines from one Fireball, Meteor as a direct hit followed by tile ticks. Watch for Aura of Flame and Avatar of Flame lines: their labels tell us whether the recorder needs a new path.</div>
+</div>
+
+<!-- ================= Build 3 ================= -->
+<div class="page">
+<h1>3. Chaplain</h1>
+<p class="tag">Light &middot; 20 points &middot; healing, shields, heal tile</p>
+<p><b>Gear:</b> highest-damage staff or wand (heals scale from it too), a shield if you have a one-hander. <b>Stats:</b> Vitality and Might.</p>
+<table>
+  <tr><th>Tier</th><th>Skill</th><th>Why it is in the test</th><th>Pts</th></tr>
+  <tr><td class="t">T1</td><td class="k">Cure</td><td class="why">Plain single-target heal: HEAL line, HealingAdministered on Chaplain, HealingReceived on the target.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Regenerate</td><td class="why">Heal per turn: a healing tick.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Healing Hand</td><td class="why">Heals 30% of max health: a percentage heal.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Blessed By Light I</td><td class="why">Mana.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Empowered Light I</td><td class="why">Healing bonus.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Elemental Protection</td><td class="why">Buff; confirms buffs create no credit lines.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Shield of Light</td><td class="why"><b>Key.</b> Absorbs damage: BLOCK lines of type BlockedByShields on the shielded ally.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Bless</td><td class="why">Party buff.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Kindred Spirit</td><td class="why">Healing others also heals you 20%: a self-heal credit generated by a heal.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Seal of Protection</td><td class="why">Damage reduction: BlockedByDamageReduction lines.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Mass Cure</td><td class="why">Multi-target heal: one HEAL per ally.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Light's Strength</td><td class="why">Might bonus.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Light's Beckon</td><td class="why">Utility: pull an enemy into Burning Ground or the Bad Bloom.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T4</td><td class="k">Holy Ground</td><td class="why"><b>Key.</b> Heal tile: healing through a tile per turn, the mirror image of the damage tiles.</td><td class="pts">2</td></tr>
+  <tr><td class="t">T4</td><td class="k">Shield of Retribution</td><td class="why">Absorbs, then explodes for fire damage when it breaks: damage credited from a broken shield. Put it on Juggernaut and let it break.</td><td class="pts">2</td></tr>
+  <tr><td class="t">T5</td><td class="k">Salvation</td><td class="why">Extra status on heal targets; confirms status application alone produces no credit.</td><td class="pts">3</td></tr>
+</table>
+<div class="box"><b>Expected in the log:</b> <span class="chk">HEAL ... HealingAdministered</span> for Chaplain and matching <span class="chk">HealingReceived</span> on the target; <span class="chk">BLOCK ... BlockedByShields</span> on whoever carries Shield of Light; Holy Ground heals labelled as a tile; a fire <span class="chk">HIT</span> credited to Chaplain when Shield of Retribution pops. In the summary, healing done should equal the sum of the targets' healing received (plus Kindred Spirit self-heals).</div>
+</div>
+
+<!-- ================= Build 4 ================= -->
+<div class="page">
+<h1>4. Bonecaller</h1>
+<p class="tag">Shadow &middot; 20 points &middot; summons, life steal, poison cloud, soul link</p>
+<p><b>Gear:</b> highest-damage staff or wand. <b>Stats:</b> Might and Vitality (Soul Crush also scales with max health).</p>
+<table>
+  <tr><th>Tier</th><th>Skill</th><th>Why it is in the test</th><th>Pts</th></tr>
+  <tr><td class="t">T1</td><td class="k">Raise Skeletal Archer</td><td class="why"><b>Key.</b> A ranged summon: its hits should appear as Summon on Bonecaller and in the game's SummonDamageDealt.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Necromancer I</td><td class="why">Summon bonus.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Tainted Touch</td><td class="why">Shadow hit with 12% life steal: a direct hit that also produces a HEAL on the caster.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Call of the Grave</td><td class="why">Damage bonus below 50%: finishing hits.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Ghost Armor</td><td class="why">Negates the next attack: does a fully negated hit produce a BLOCK line or nothing?</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Blind</td><td class="why">Filler for the unlock.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Poison Cloud</td><td class="why"><b>Key.</b> A tile that applies 4 Poisoned stacks within 2 hexes: a second poison-tile source, from a different tree than Bloom's.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Necromancer II</td><td class="why">Summon bonus.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Thirst I</td><td class="why">Life steal on everything: HEAL lines paired with hits.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Haunt</td><td class="why">Shadow damage per turn with life steal: a tick that also heals.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Raise Skeletal Warrior</td><td class="why">Melee summon; try to let it land a killing blow (KILL line should name Bonecaller or the skeleton, we want to see which).</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Soul Crush</td><td class="why">Big single hit for the biggest-hit stat.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Consumption</td><td class="why">Multi-target drain.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T4</td><td class="k">Vampiric Aura</td><td class="why">Allies life steal: healing on other characters caused by Bonecaller's aura.</td><td class="pts">2</td></tr>
+  <tr><td class="t">T4</td><td class="k">Soul Link</td><td class="why"><b>Key.</b> Damage to one target is also dealt to the linked one: duplicated credits, who gets them?</td><td class="pts">2</td></tr>
+  <tr><td class="t">T5</td><td class="k">Raise Skeletal Mage</td><td class="why">Third summon, caster type.</td><td class="pts">3</td></tr>
+</table>
+<div class="box"><b>Expected in the log:</b> <span class="chk">HIT ... [Summon]</span> lines on Bonecaller for every skeleton hit and a matching <span class="chk">SummonDamageDealt</span> in the game totals; <span class="chk">HEAL</span> after life-steal hits; <span class="chk">[StatusTick: Poisoned]</span> from Poison Cloud credited to Bonecaller; with Soul Link active, two credits per hit on the linked pair.</div>
+</div>
+
+<!-- ================= Build 5 ================= -->
+<div class="page">
+<h1>5. Juggernaut</h1>
+<p class="tag">Warrior &middot; 20 points &middot; two-hander, cleaves, bleed, self-damage, the party's punching bag</p>
+<p><b>Gear:</b> the biggest two-handed weapon you have, heavy armor. <b>Stats:</b> Might and Vitality. Stand in front so enemies hit you: that is what fires Thorns, Venomous Skin, Fire Shield and the shields.</p>
+<table>
+  <tr><th>Tier</th><th>Skill</th><th>Why it is in the test</th><th>Pts</th></tr>
+  <tr><td class="t">T1</td><td class="k">Double Edge</td><td class="why"><b>Key.</b> 1.8x weapon damage and 15% back to you: a hit and a self-inflicted TAKEN line in one cast.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Bash</td><td class="why">Knockback: push an enemy into Burning Ground or the Bad Bloom (tile on-enter credit for Ember or Bloom).</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Fracture</td><td class="why">Direct hit that lowers resistance: BLOCK-by-resistance lines should shrink afterwards.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Rage</td><td class="why">Damage up, damage taken up: more hits on the tank.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Warmonger I</td><td class="why">Damage bonus.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Challenger</td><td class="why">Armor when surrounded: BlockedByArmor lines.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Cleave</td><td class="why">Arc hit on several enemies.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Warmonger II</td><td class="why">Damage bonus.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Tempered Rage</td><td class="why">Rage variant with armor.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Into the Fray</td><td class="why">Damage per nearby enemy.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Bleeding Cleave</td><td class="why"><b>Key.</b> Arc hit applying 2 Bleeding stacks to each target: a burst of direct credits then bleed ticks on several enemies at once.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Slam</td><td class="why">Line hit, another multi-target shape.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Two-Handed Mastery</td><td class="why">Damage bonus.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T4</td><td class="k">Bone Collector</td><td class="why">Stacks on kills: make sure Juggernaut gets a few kills.</td><td class="pts">2</td></tr>
+  <tr><td class="t">T4</td><td class="k">Blood Drinker</td><td class="why">Basic attacks life steal: HEAL on basic hits.</td><td class="pts">2</td></tr>
+  <tr><td class="t">T5</td><td class="k">Colossus</td><td class="why"><b>Key.</b> Damage splashes to neighbours for 50%: the game records this splash specially; we want to see how it is labelled and to whom.</td><td class="pts">3</td></tr>
+</table>
+<div class="box"><b>Expected in the log:</b> a <span class="chk">HIT</span> and a <span class="chk">TAKEN</span> on Juggernaut for each Double Edge; several <span class="chk">HIT</span> lines per Cleave and Slam; <span class="chk">[StatusTick: Bleeding]</span> ticks; extra splash <span class="chk">HIT</span> lines on neighbours with Colossus; <span class="chk">BLOCK ... BlockedByArmor</span> when enemies hit him; <span class="chk">[Returned]</span> credits going to Bloom (Venomous Skin poison) when he is the one being hit, not to him.</div>
+</div>
+
+<!-- ================= Build 6 ================= -->
+<div class="page">
+<h1>6. Cutthroat</h1>
+<p class="tag">Thief &middot; 20 points &middot; crits, poison on hit, execution</p>
+<p><b>Gear:</b> two daggers or a dagger and a one-hander, whatever gives the highest crit chance. <b>Stats:</b> Dexterity heavy (crit chance and crit damage), rest Vitality.</p>
+<table>
+  <tr><th>Tier</th><th>Skill</th><th>Why it is in the test</th><th>Pts</th></tr>
+  <tr><td class="t">T1</td><td class="k">Poison Weapon</td><td class="why"><b>Key.</b> Every attack applies Poisoned: poison ticks that originate from a weapon buff rather than a spell.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Death Dealer I</td><td class="why">Crit damage.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Cripple</td><td class="why">Direct hit with a status.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Ambush I</td><td class="why">Damage bonus on isolated enemies.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Fencer's Finesse I</td><td class="why">Crit chance.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T1</td><td class="k">Dagger Throw</td><td class="why">Ranged direct hit.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Death Dealer II</td><td class="why">Crit damage.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Poisoned Dagger</td><td class="why">Hit plus 2 Poisoned stacks.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Ambush II</td><td class="why">Damage bonus.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T2</td><td class="k">Hide In Shadows</td><td class="why">Stealth: does the first hit out of stealth get flagged differently?</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Garrote</td><td class="why">Weapon hit plus 3 Bleeding stacks and Disabled.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Hidden Blade</td><td class="why">Basic-attack crit damage: big CRIT lines.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T3</td><td class="k">Fight Dirty</td><td class="why">2 more Poisoned stacks per attack.</td><td class="pts">1</td></tr>
+  <tr><td class="t">T4</td><td class="k">Smoke Bomb</td><td class="why">A non-damage tile: must produce no HIT lines at all.</td><td class="pts">2</td></tr>
+  <tr><td class="t">T4</td><td class="k">Master Assassin</td><td class="why">Always max damage: hit amounts should be identical for repeated casts on the same target, easy to spot.</td><td class="pts">2</td></tr>
+  <tr><td class="t">T5</td><td class="k">Deathblow</td><td class="why"><b>Key.</b> Crits deal +200%: use on a low enemy for a <span class="chk">KILL</span> with a large <span class="chk">overkill</span> value.</td><td class="pts">3</td></tr>
+</table>
+<div class="box"><b>Expected in the log:</b> <span class="chk">CRIT</span> lines under a good share of Cutthroat's hits; <span class="chk">[StatusTick: Poisoned]</span> ticks credited to Cutthroat on every enemy he has touched; a <span class="chk">KILL ... by Cutthroat (Deathblow, Direct)</span> with <span class="chk">overkill</span>; no lines from Smoke Bomb. In the summary, crit rate should match what you saw on screen.</div>
+</div>
+
+<!-- ================= Battle script ================= -->
+<div class="page">
+<h1>The battle, turn by turn</h1>
+<p class="sub">Order within a turn does not matter. The goal is that every path fires at least twice and that a few enemies stay alive long enough to take several ticks.</p>
+
+<h3>Before the first move</h3>
+<ul>
+  <li>Note which enemies are where. Pick two enemies that will be kept alive as "tick sponges": poisoned, burning, bleeding and standing in tiles. Do not focus them.</li>
+  <li>Juggernaut takes the front; everyone else stays behind Brambles.</li>
+</ul>
+
+<h3>Turn 1: lay the ground</h3>
+<ul>
+  <li><b>Ember:</b> Burning Ground across the lane enemies will walk through.</li>
+  <li><b>Bloom:</b> The Bad Bloom next to the largest group. Brambles between the group and the party.</li>
+  <li><b>Chaplain:</b> Holy Ground under the party. Shield of Light on Juggernaut.</li>
+  <li><b>Bonecaller:</b> Raise Skeletal Archer. Poison Cloud on the largest group.</li>
+  <li><b>Juggernaut:</b> Rage, then Double Edge on the nearest enemy (watch for the self TAKEN line).</li>
+  <li><b>Cutthroat:</b> Poison Weapon, then Dagger Throw at a tick sponge.</li>
+</ul>
+
+<h3>Turn 2: statuses and multi-target</h3>
+<ul>
+  <li><b>Ember:</b> Immolate a tick sponge. Fireball the group. Rune of Exploding under a cluster.</li>
+  <li><b>Bloom:</b> Entangle the other sponge. Venomous Skin on Juggernaut. Nature Summoning II.</li>
+  <li><b>Chaplain:</b> Regenerate on Juggernaut. Cure whoever took damage. Light's Beckon an enemy into Burning Ground.</li>
+  <li><b>Bonecaller:</b> Haunt a sponge. Raise Skeletal Warrior. Tainted Touch anything.</li>
+  <li><b>Juggernaut:</b> Bleeding Cleave into the group. Bash an enemy into a tile.</li>
+  <li><b>Cutthroat:</b> Garrote a sponge. Basic attack something else (poison from the weapon).</li>
+</ul>
+
+<h3>Turn 3: the big shapes</h3>
+<ul>
+  <li><b>Ember:</b> Meteor on the group (direct hit plus lingering fire). Detonate if surrounded.</li>
+  <li><b>Bloom:</b> Mass Entangle. The Good Bloom under the party.</li>
+  <li><b>Chaplain:</b> Mass Cure. Shield of Retribution on Juggernaut, then let it break.</li>
+  <li><b>Bonecaller:</b> Soul Link the two sponges. Consumption. Raise Skeletal Mage.</li>
+  <li><b>Juggernaut:</b> Slam through a line. Basic attacks (Blood Drinker life steal).</li>
+  <li><b>Cutthroat:</b> Smoke Bomb on the party. Deathblow on the lowest enemy: aim for a kill with overkill.</li>
+</ul>
+
+<h3>Turn 4 onward: let it run</h3>
+<ul>
+  <li>Keep the sponges alive and inside the tiles; re-apply Immolate, Haunt, Entangle as they expire. Let the skeletons and the animal fight; try to let a summon take a kill.</li>
+  <li>Take a few hits on Juggernaut and on Bloom so Thorns, Fire Shield and Venomous Skin all fire.</li>
+  <li>Finish with Cutthroat and Juggernaut taking kills so both have kills in the summary. Then let the sponges die to ticks if you can: a <span class="chk">KILL ... (Poisoned, StatusTick)</span> line is the best possible evidence.</li>
+</ul>
+<div class="box">When the post-battle screen appears, open the stats tab and glance at it, then quit to the menu. The summary and the JSON are written the moment that screen opens.</div>
+</div>
+
+<!-- ================= Checklist ================= -->
+<div class="page">
+<h1>Checklist and what to send</h1>
+<table>
+  <tr><th style="width:5%">&#10003;</th><th>Check</th></tr>
+  <tr><td></td><td>Log has <span class="chk">===== BATTLE START (turn 1) =====</span> when the fight begins.</td></tr>
+  <tr><td></td><td>Every floating damage number has a <span class="chk">HIT</span> line; crits have a <span class="chk">CRIT</span> line under them; Fireball, Cleave, Slam, Mass Cure give one line per target.</td></tr>
+  <tr><td></td><td>Poison, bleed, burn and Haunt ticks appear as <span class="chk">[StatusTick: &lt;name&gt;]</span> credited to the caster, not to the enemy and not missing.</td></tr>
+  <tr><td></td><td>Burning Ground shows <span class="chk">[TurnStart | Burning Ground]</span>; Bad Bloom and Poison Cloud show as a tile or as status ticks credited to their owner.</td></tr>
+  <tr><td></td><td>Thorns, Fire Shield and Venomous Skin produce <span class="chk">[Returned]</span> credits for the character who was hit (Bloom, Ember) and poison ticks for Bloom.</td></tr>
+  <tr><td></td><td>Skeleton and animal hits show as <span class="chk">[Summon]</span> on their master.</td></tr>
+  <tr><td></td><td>Every enemy death has a <span class="chk">KILL &lt;enemy&gt; by &lt;name&gt;</span> line naming the right character and path; Deathblow shows <span class="chk">overkill</span>.</td></tr>
+  <tr><td></td><td>Heals give <span class="chk">HEAL</span> lines; Shield of Light gives <span class="chk">BLOCK ... BlockedByShields</span>; Ghost Armor either gives a BLOCK line or nothing (note which).</td></tr>
+  <tr><td></td><td>The summary's turn count equals the last turn number you saw.</td></tr>
+  <tr><td></td><td><b>The decisive check:</b> in the summary, for each character, <span class="chk">damage</span> equals the <span class="chk">GAME'S OWN TOTALS DamageDealt</span> (plus SummonDamageDealt and DamageReturned where present). Write down any character where they differ and by how much.</td></tr>
+  <tr><td></td><td>No <span class="chk">record failed</span> warnings anywhere in the log.</td></tr>
+</table>
+
+<h2>Things worth writing down while you play</h2>
+<ul>
+  <li>Any damage number you saw on screen that has no matching HIT line (who, roughly how much, what caused it).</li>
+  <li>Any line whose path label looks wrong to you: for example a Burning Ground tick labelled Direct, or a poison tick labelled with the wrong caster.</li>
+  <li>How Aura of Flame, Avatar of Flame, Colossus splash and Soul Link were labelled: those are the four we could not predict from the code.</li>
+</ul>
+
+<h2>Send me</h2>
+<ul>
+  <li><code>BepInEx\LogOutput.log</code> (the whole file; it keeps sessions, the last SESSION START is yours).</li>
+  <li>The newest file in <code>BepInEx\BattleStats\</code> (one JSON per battle).</li>
+  <li>Your notes from above, and a screenshot of the game's stats page if you can.</li>
+</ul>
+<p class="small">Respec cost is 250 gold per level; all six builds together are about 27,000 gold. Skill totals are 20 points each, which is the level-18 allowance (level minus 1, plus 3). Tier unlocks need 2, 4, 6 and 10 points in earlier tiers; every build spends 6 in tier 1 and 4 in tier 2 before going higher, so nothing is locked.</p>
+</div>
+</body>
+</html>

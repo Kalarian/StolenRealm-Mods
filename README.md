@@ -1,0 +1,71 @@
+# Stolen Realm extracted data (build 2025-06-17, Steam buildid 20244830, Unity 2022.3.10f1)
+
+- data/tree_<Tree>.md   : per-tree skill tables (tier, active/free action, mana ratio, cooldown, effects) generated from resources.assets
+- data/*.json           : raw MonoBehaviour dumps (SkillInfo, ActionInfo, ActionStatusInfo, CharacterAttribute, items)
+- decomp/               : Assembly-CSharp decompiled with ilspycmd (GlobalSettings.cs has all balance constants). CURRENT = Steam build 25240684 (2026-09-15, Unity 2022.3.62); the previous build (20244830, 2025-06-17, Unity 2022.3.10) is kept in decomp_20244830/. `python tools/diff_patched_methods.py` diffs every method the mods patch between the two. Game updates need BepInEx.cfg `[Preloader.Entrypoint] Type = MonoBehaviour` (with the default `Application` the 2026-09 build destroys the plugin objects 0.4 s after startup and every mod silently unpatches itself).
+- tools/                : extraction pipeline. Order: fast_classes.py -> dump2.py <ClassNames> -> make_tables.py
+  Requires: pip install UnityPy TypeTreeGeneratorAPI ; dotnet tool install -g ilspycmd
+
+Verified mechanics. NOTE: the live values come from the GlobalSettings asset (data/GlobalSettings.json), which OVERRIDES the C# field defaults in decomp/GlobalSettings.cs. Always trust the JSON.
+- 1 Action per turn (ActionType.Action), Free Actions (ActionType.FreeAction) cost no AP, limited only by cooldown/mana
+- Skill points: 1 per level after 1 (level 30 cap). Tier costs [1,1,1,2,3]; points in previous tiers needed to unlock tier 2..5: [2,4,6,10]
+- Attribute points: 50 at creation (each stat 8-14), +5 per level. Every attribute formula uses (stat - 8).
+- Might: +1% Damage & Healing (AbilityPower) and +1% Armor & Magic Armor per point. Monk 'Strength' passive x1.33 on the damage part.
+- Vitality: +5 HP and +1% max HP per point. Base HP = 100 + 15 per level above 1.
+- Intelligence: +5 mana, +1% max mana per point; +1 skill range per 25 Int (max +3).
+- Dexterity: +1 crit rating (curve 1->4%, 50->30%, 300->100%, linear between; base 2%), +1.5% crit damage (base 50%); +1 movement per 25 Dex (max 3).
+- Reflex: +1 dodge rating (curve 1->4%, 100->60%, 300->92%, linear between; dodge capped 75%), +1% dodge-counter chance, +1% opportunity attack damage; +1 extra counter attack per 25 Reflex (max 5).
+- Armor: 10 armor = 1 damage prevented, max 90% of a hit. Magic Armor covers Fire/Cold/Lightning. Shadow/Holy ignore armor.
+- Caps: DamageReduction 50, Dodge 75, resists 75 (Fire 50), MaxResist attribute 95
+- Life steal: LifeOnHit (Blood Drinker, Thirst, Vampiric enchant) = % max HP per hit, x0.5 free actions, x0.25 AoE, x0.5 per hit when dual wielding; NOT reduced by level.
+  Damage-based LifeSteal (separate attribute) IS reduced by level: x1.0 to 15, 0.8 at 16, 0.7 at 20, 0.5 at 25, 0.3 at 30, 0.1 at 40+.
+- Flat elemental damage enchants: no item-level scaling, halved on 1H/shield, added to base before Might/dmg%/crit, only if the hit already deals that element.
+- Respec: 250 gold x level. Item stats +23%/item level, +10%/rarity step.
+
+Mythic item reference: `mythic-items.md` (all 194 rarity-4 items with stats, granted skills, triggers and verified sources). Rebuild: `cd data && python ../tools/mythic_index.py && python ../tools/mythic_md.py`.
+
+Drop-rate mod (BepInEx 5 plugin, source + build instructions): `mods/DropRates/` — see its README. Installed at `<game>\BepInEx\plugins\DropRates\`; config at `<game>\BepInEx\config\stolenrealm.droprates.cfg`.
+
+XP-by-difficulty mod (BepInEx 5 plugin): `mods/DifficultyXP/` — XP bonus mirrors the difficulty's gold bonus. Installed at `<game>\BepInEx\plugins\DifficultyXP\`; config `<game>\BepInEx\config\stolenrealm.difficultyxp.cfg`.
+
+Fortune reference: `fortunes.md` (all 83 fortunes with effects, scaling, and the island event + option that grants each). Rebuild: `cd data && python ../tools/fortune_md.py`.
+
+QoL mod (BepInEx 5 plugin): `mods/QoL/` — upgrade cost by level gap (the Treasure Chest event feature was removed 2026-09-15: it never did anything, those events already spawn). Config `<game>\BepInEx\config\stolenrealm.qol.cfg`.
+
+TargetTooltip mod (BepInEx 5 plugin): `mods/TargetTooltip/` — in battle, hovering an enemy / valid target cell shows a tooltip naming the attack or skill a click will fire. Port of the one still-useful feature of Eradev's BetterTooltips (GPL-3.0), rewritten for the 2025 build. Config `<game>\BepInEx\config\stolenrealm.targettooltip.cfg` (F9 reload, F10 toggles Compact/Full). `mods/BetterTooltips/` holds the upstream source + trial csproj only (not installed).
+
+SpecialTooltips mod (BepInEx 5 plugin): `mods/SpecialTooltips/` — the right-click Examine window's 'Special' entries get hover tooltips. The game has no text for these tags, so the defaults were derived from the tagged enemies' passives/affixes/stats (research in `data/special_effect_research.txt`; enemy affixes dumped to `data/EnemyMod.json`). Wording editable in `<game>\BepInEx\config\stolenrealm.specialtooltips.descriptions.txt`.
+
+ScalingTooltips mod (BepInEx 5 plugin): `mods/ScalingTooltips/` — every damage/heal number in skill, action and status tooltips gets a '(70% Attack Power)' / '(50% Spell Power, Fire)' label, via prefix+postfix on `Tooltip.GetDamageString(text, List<string> effects, ...)`. Config `<game>\BepInEx\config\stolenrealm.scalingtooltips.cfg`.
+
+SharedFortunes mod (BepInEx 5 plugin): `mods/SharedFortunes/` — account-wide fortunes via a pool file `SharedFortunes.json` in the save folder (LocalLow\Burst2Flame Entertainment\Stolen Realm), seeded from all CharacterN.json; postfixes on Character.Load / AddFortune / LevelUpAllMyFortunesToMyLevel. Adds/raises only, capped to character level by default.
+
+FortunePreview (`mods/FortunePreview/`, quest-select fortune list, event-option fortune lines, Source section in fortune tooltips) and FortuneUpgrade (`mods/FortuneUpgrade/`, pay to raise a fortune to your level, 2H-weapon pricing) — both tested and in the share zip. TargetTooltip now also previews damage vs the hovered enemy. QoL stamps the log with the Steam name/ID (`LogOwner.cs`).
+
+Running in-game test checklist, grouped by mod: `TESTING.md`.
+
+LevelSync mod (BepInEx 5 plugin): `mods/LevelSync/` — every character is kept at the account's highest ExperienceLevel (Character.Load + GiveExperience postfixes; points are derived from Level so no extra work). Pool mirrored to `LevelSync.json` in the save folder.
+
+AutoSalvage mod (BepInEx 5 plugin): `mods/AutoSalvage/` — on loot delivery (GameLogic.GiveItems/GiveItem postfix + Character.Load sweep) sells Common/Uncommon/Rare equipment and commodities at SellPrice, stashes materials via ItemStashData.AddItemToStash; shop/craft/gamble/transfer deliveries suppressed.
+
+SharedGold mod (BepInEx 5 plugin): `mods/SharedGold/` — one gold pool for all owned campaign characters by consolidation (sum-preserving: holder = selected/party/first character gets everything, others 0; Character.Load + GiveGold postfixes + 0.5 s tick). Party gold is already the sum over party members, so no display patch needed.
+
+SharedProgress mod (BepInEx 5 plugin): `mods/SharedProgress/` - campaign progress (CompletedQuestNodes incl. town nodes, LastMainQuestLevelCompleted, HighestCompletedLevel, ShopHighestLevel, LastVisitedActIndex, legacy CompletedMainQuests) is unioned across all campaign characters via `SharedProgress.json` in the save folder; Character.Load postfix merges, QuestManager.CompleteQuest / TownManager.OpenTown postfixes trigger a party->roster sync from Tick (outside battle), non-party characters force-saved. Never removes; Roguelike ignored.
+
+NumberFormat mod (BepInEx 5 plugin): `mods/NumberFormat/` - thousands separators in every displayed number via prefixes on `TMP_Text.text` setter / `SetText(string[,bool])` and `UnityEngine.UI.Text.text` (Harmony `__0` ref argument); digit runs >= 4 outside rich-text tags, not glued to letters/'#'/'_', not dates/times/fractions/leading-zero codes; input-field texts skipped (cached parent check).
+
+Master switchboard: `<game>\BepInEx\config\stolenrealm.mods.cfg` (one true/false line per mod + global VerboseLogging). ModMenu (`mods/ModMenu/`, 15th plugin) puts it behind an in-game window: F9 opens a checkbox list built from the game's own widgets, Apply writes the file and bumps an AppDomain reload token that every plugin's Update polls (`MasterConfig.ReloadRequested`), so patches are applied/removed live; with the menu present the per-mod F9 no longer reloads directly (`MasterConfig.MenuPresent`). Every plugin carries a copy of `src/MasterConfig.cs`; all Plugin.cs files are generated by `tools/gen_master.py` (ApplyPatches/RemovePatches/ApplyMasterVerbose; SPEC dict per plugin). New mods: add to PLUGINS + SPEC, rerun, rebuild all.
+
+Share package for friends (loader + `BepInEx.cfg` with `AppendLog = true` so LogOutput.log keeps every session, each marked by the `SESSION START` line + all fourteen plugins (TestDriver never) + configs with VerboseLogging ON for now + PDF: one-page summary, then one plain-language page per mod with its settings and hotkeys; source `mods/share/Mods-OnePager.html`, rendered with Edge headless): `mods/StolenRealm-Mods-install.zip`. Rebuild with `python tools/pack_zip.py` (renders the PDF, copies DLLs/configs from the game folder with the share-config rules, then `bash tools/build_installer.sh`).
+
+Build 3 guide (Lightning glass cannon around the Transcendence fortune: Conduit, Thunder Wrath, Heavy Rains, Overload + Dark Pact / Hot Head / Fuel for the Flames / Seal of Might): `build3/Build3-Storm-Conduit.html` -> `build3/Build3-Storm-Conduit-v2.pdf` (8 pages, incl. owned-fortunes section read from the saves; the v1 file was locked by a viewer).
+
+BattleStats mod (in the zip): `mods/BattleStats/` - recorder (every damage/heal/block credit with its path: direct, status tick, tile, summon, thorns; crits, kills, overkill, element, casts, mana, movement) + post-battle Stats window rows (Damage Breakdown / Hits / Damage By Element / Activity) + hover-the-name top-sources tooltip. Extra numbers live in the game's replicated `CharacterBattleStats.BattleStats` dictionary under keys 1000+ (`SharedStats.cs`), so clients see the host's numbers. Plan in `PLAN.md`, test plan PDF `BattleStats Test Plan.pdf`, README in the folder. Verified by the automated driver (rows sum to the game's Damage Dealt).
+
+ThreatOverlay mod: `mods/ThreatOverlay/` — hold Left Alt in battle to tint hexes enemies can reach (red) and hit (orange) next turn; Dijkstra over HexCellManager.HexCost with TurnFreeMovementPoints, strike = longest harmful simple range; paints via the cell overlay + HexCell.UpdateHexCell postfix. In the zip.
+
+Installer: `mods/Installer/` (net48 WinForms exe, no runtime needed on Win10/11) embeds `mods/StolenRealm-Mods-install.zip`; window with detected game folder (Steam registry + libraryfolders.vdf, Browse fallback), a 'reset settings' checkbox, Install/Update and Remove buttons. Policy: DLLs/loader always replaced; retired mods removed (any `BepInEx/plugins/<X>` holding a `stolenrealm.*.dll` that is not in the pack, except TestDriver, plus its cfg and switchboard line; verified headlessly against a fake folder 2026-09-15); every `.cfg` MERGED (friend's values kept, missing settings added with the pack's values and comments, in the right section; master file too) unless the checkbox is ticked, which replaces the cfg files. Headless test mode: `"Install Stolen Realm Mods.exe" <gameFolder> install [overwrite] | uninstall` writes install-log.txt. Rebuild after every zip change: `bash tools/build_installer.sh` -> `mods/share/Install Stolen Realm Mods.exe`.
+
+TestDriver (dev only, not shipped): `mods/TestDriver/` + `tools/run_test_battle.sh` — launches the game with `-srtest` and plays a full battle automatically (see its README). Run it after any battle/UI mod change.
+
+Test characters: `tools/make_test_characters.py` creates/replaces Test1..Test6 (the six test-plan builds, level 18) as real saves; drive them with `bash tools/run_test_battle.sh headless 6 Test1,Test2,Test3,Test4,Test5,Test6`.

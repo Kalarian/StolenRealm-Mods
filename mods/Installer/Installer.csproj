@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>Install Stolen Realm Mods</AssemblyName>
+    <RootNamespace>Installer</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Product>Stolen Realm Mods Installer</Product>
+    <Version>1.0.0</Version>
+    <ApplicationIcon></ApplicationIcon>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\StolenRealm-Mods-install.zip" LogicalName="mods.zip" />
+  </ItemGroup>
+</Project>

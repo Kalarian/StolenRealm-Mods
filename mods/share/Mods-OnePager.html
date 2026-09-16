@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stolen Realm Mods</title>
+<style>
+  @page { size: Letter; margin: 0.35in 0.45in; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Calibri, Arial, sans-serif; color: #1f2430; margin: 0; font-size: 8.6pt; line-height: 1.15; }
+  h1 { font-size: 17pt; margin: 0 0 1px; color: #2b2f3a; letter-spacing: 0.2px; }
+  .sub { color: #5a6270; margin: 0 0 6px; font-size: 10pt; }
+  h2 { font-size: 11pt; margin: 6px 0 3px; color: #8a4b1f; border-bottom: 2px solid #e5d2c0; padding-bottom: 1px; }
+  ol.steps { margin: 4px 0 0 20px; padding: 0; }
+  ol.steps li { margin: 2px 0; }
+  table { border-collapse: collapse; width: 100%; }
+  td { vertical-align: top; padding: 0 6px; border-bottom: 1px solid #e9e4dc; }
+  td.name { width: 24%; font-weight: 700; color: #2b2f3a; white-space: nowrap; }
+  td.what { width: 76%; }
+  .tip { background: #f6f1ea; border-left: 4px solid #c58a5a; padding: 5px 10px; margin: 6px 0 0; font-size: 10pt; }
+  .keys { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 3px; font-size: 9.5pt; }
+  kbd { font-family: Consolas, monospace; background: #eceff3; border: 1px solid #c9d0da; border-radius: 4px; padding: 0 5px; font-size: 10pt; }
+  .foot { margin-top: 4px; font-size: 8.4pt; color: #6b7280; line-height: 1.15; }
+
+  /* per-mod pages */
+  .page { page-break-before: always; font-size: 10pt; line-height: 1.3; }
+  .page h1 { font-size: 17pt; margin: 0; }
+  .page .tag { color: #8a4b1f; font-size: 10pt; margin: 0 0 8px; }
+  .page p { margin: 4px 0 6px; }
+  .page ul { margin: 2px 0 6px 18px; padding: 0; }
+  .page li { margin: 2px 0; }
+  .page table.cfg td { padding: 3px 7px; font-size: 9.4pt; }
+  .page td.key { width: 26%; font-family: Consolas, monospace; font-size: 9pt; white-space: nowrap; color: #2b2f3a; }
+  .page td.def { width: 12%; color: #5a6270; white-space: nowrap; }
+  .page td.desc { width: 62%; }
+  .page .file { font-family: Consolas, monospace; font-size: 9pt; color: #5a6270; }
+  .page .hk { background: #f6f1ea; border-left: 4px solid #c58a5a; padding: 6px 10px; margin: 6px 0 8px; }
+  .dense table.cfg td { padding: 1px 5px; font-size: 8.1pt; line-height: 1.18; }
+  .dense p, .dense li { font-size: 9pt; line-height: 1.2; }
+  .dense h2 { margin: 5px 0 3px; }
+  .dense td.key { white-space: normal; width: 22%; }
+  .dense td.desc { width: 66%; }
+</style>
+</head>
+<body>
+<h1>Stolen Realm Mods</h1>
+<p class="sub">Seventeen small quality-of-life mods for our group. Nothing changes for players who don't install them, and nothing is sent to anyone else.</p>
+
+<h2>Install (2 minutes)</h2>
+<ol class="steps">
+  <li>In Steam, right-click <b>Stolen Realm</b> &rarr; <b>Manage</b> &rarr; <b>Browse local files</b>.</li>
+  <li>Extract the zip into that folder, so <b>winhttp.dll</b> and the <b>BepInEx</b> folder sit next to <b>Stolen Realm.exe</b>. If Windows asks to merge folders, say yes.</li>
+  <li>Launch the game as normal. That's it. To uninstall, delete winhttp.dll and the BepInEx folder.</li>
+</ol>
+
+<h2>What you get</h2>
+<table>
+  <tr><td class="name">Better loot</td><td class="what">Far fewer grey and green drops, more rares, legendaries and mythics. Elites can drop legendaries; champions and bosses can drop mythics. The Merchant stocks mythics more often, and the town armorers and jewelers now sell rare, legendary and mythic gear, with better odds each act.</td></tr>
+  <tr><td class="name">XP that scales</td><td class="what">Harder difficulties now give more experience, at the same rate they give more gold: Classic +25%, Veteran +50%, Torturous +75%, Heart of the Realm +100%. The campfire "Prepared" bonus boosts XP too.</td></tr>
+  <tr><td class="name">Cheaper upgrades</td><td class="what">Upgrading an item at Noor's only charges the difference between its current level and yours, so topping up gear every few levels no longer wastes gold.</td></tr>
+  <tr><td class="name">"What will this click do?"</td><td class="what">In battle, hover an enemy (or a target cell with a skill selected) and a tooltip shows the attack or skill a click will fire, plus <b>the damage it will actually do to that enemy</b> after its resistances and armor, and what share of its health that is. <kbd>F10</kbd> switches between the full tooltip and a compact one.</td></tr>
+  <tr><td class="name">Enemy specials explained</td><td class="what">Right-click an enemy to examine it, then hover anything under <i>Special</i> (Armored, Unpredictable, Pack Hunter, Undying...) to see what it actually does, with that enemy's real numbers.</td></tr>
+  <tr><td class="name">Account-wide progress</td><td class="what"><b>Fortunes</b>, <b>levels</b>, <b>gold</b> and <b>campaign progress</b> (quest map, act, shop level) are shared across all your campaign characters: any fortune one character earned is available to all of them, every character is kept at your highest character's level (points included), and whoever you are playing holds the whole gold purse. Nothing is ever removed, lowered or created, and it only ever touches your own characters on your own PC.</td></tr>
+  <tr><td class="name">Fortune hunting</td><td class="what">Hover a quest on the campaign map to see which fortunes you can still earn there (<kbd>LShift</kbd> for the long list). Event options say which fortune they lead to, even hidden or after-a-fight ones. Every fortune's tooltip says where to find it, and the Fortune window now lists all 83 fortunes, the ones you lack greyed out, so you can read every effect in one place.</td></tr>
+  <tr><td class="name">Junk auto-sold</td><td class="what">White, green and blue equipment and trade commodities are sold the moment they drop (you see "+340 gold, sold 4" over your character); crafting materials, and commodities any recipe needs, go straight to storage. Legendaries, mythics, consumables and anything you bought or crafted are never touched. Each rarity has its own switch in the config.</td></tr>
+  <tr><td class="name">Fortune upgrades</td><td class="what">In town, open the Fortune window, hover a fortune and press <kbd>U</kbd> to raise it to your level for gold. Priced like upgrading a two-handed weapon of the same rarity, and you only pay for the levels gained.</td></tr>
+  <tr><td class="name">Readable numbers</td><td class="what">Every number the game shows gets thousands separators: 418218 gold reads 418,218, a 1250 hit reads 1,250. Codes, dates, colours and anything you type are left alone.</td></tr>
+  <tr><td class="name">Mod window</td><td class="what">Press <kbd>F9</kbd> in game for a window with a checkbox per mod. Tick, untick, Apply: the mods switch on or off right away, no restart, no config files to edit.</td></tr>
+  <tr><td class="name">Battle stats that add up</td><td class="what">The post-battle Stats window gains a damage breakdown (direct, poison/burn ticks, ground tiles, summons, thorns), crit rate, kills, biggest hit, best skill, damage by element, casts and mana. Hover a name for that character's top skills.</td></tr>
+  <tr><td class="name">Threat overlay</td><td class="what">In battle, hold <kbd>Left Alt</kbd>: hexes enemies can walk to next turn go red, hexes they could hit from there go orange. Release to clear.</td></tr>
+  <tr><td class="name">Skill scaling shown</td><td class="what">Every damage number in a skill tooltip says where it comes from, e.g. <b>118-159 (0.7x AP)</b>, and a <i>Scaling</i> line shows the full math: skill factor, your stat, and every bonus you have. AP = Attack Power (weapon-based), SP = Spell Power.</td></tr>
+</table>
+
+<h2>Good to know</h2>
+<div class="keys">
+  <div><kbd>F9</kbd> opens the mod window: tick or untick any mod, Apply. No restart.</div>
+  <div><kbd>F10</kbd> flips the battle tooltip style.</div>
+  <div><kbd>U</kbd> upgrades a hovered fortune (in town).</div>
+  <div><kbd>Left Alt</kbd> (hold) shows enemy threat in battle.</div>
+</div>
+<p class="tip"><b>Multiplayer:</b> loot is rolled on each player's own PC, so the loot mod only improves drops for people who have it installed. Battle XP follows the host's mod; quest and event XP follows your own. Everyone installing = everyone benefits.</p>
+<p class="foot"><b>Turning a mod off:</b> press <kbd>F9</kbd> in game, untick it, Apply (or edit <b>BepInEx\config\stolenrealm.mods.cfg</b> by hand). Same file has one VerboseLogging switch for everything. Detailed settings live in the other <b>stolenrealm.*.cfg</b> files next to it. If something looks wrong, send <b>BepInEx\LogOutput.log</b> (it is stamped with your Steam name so we know whose it is, keeps every session, and each launch starts with a SESSION START line; delete it if it gets big). <b>The following pages describe each mod and its settings in detail.</b></p>
+
+<!-- ===================== 1. DropRates ===================== -->
+<div class="page dense">
+<h1>Better loot</h1>
+<p class="tag">DropRates &middot; settings in <span class="file">BepInEx\config\stolenrealm.droprates.cfg</span></p>
+<p>Reshapes what enemies drop so that a run produces less grey and green clutter and noticeably more rare, legendary and mythic gear. It changes the chance of each rarity per kill, the best rarity each kind of enemy may drop, and how often named "personal" drops (a boss's signature item) appear. The Merchant's equipment slot and Ulf's gambling table are also tilted toward the top rarities. Roguelike mode is left exactly as the game ships it.</p>
+<p><b>As shipped:</b> per kill, greys drop a quarter as often as normal and greens a bit less often; rares four times as often; legendaries about 8% of kills (capped at 16% even with Endless bonuses); mythics about 12% of eligible kills (capped at 25%). Soldiers can now drop rares, elites legendaries, champions mythics. Named boss/elite drops are five times as likely. Enemies summoned by other enemies (totems, props, clones) keep the normal rolls, so a boss that spawns thirty props does not hand out thirty mythic rolls. The town armorer and jeweler stock rare or better, with legendary and mythic odds that climb each act; gold is the limit there, not availability.</p>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Common, Uncommon, Rare, Legendary, Mythic</td><td class="def">0.25 / 0.8 / 4 / 40 / 250</td><td class="desc">Multiplier on the normal chance of that rarity dropping from a kill. 1 = as the game ships. Bigger = more often; 0 = never.</td></tr>
+  <tr><td class="key">MaxChance&lt;Rarity&gt;</td><td class="def">100, Leg 16, Myth 25</td><td class="desc">Ceiling on the final per-kill chance in percent, after difficulty and Endless bonuses. 100 = none.</td></tr>
+  <tr><td class="key">AlsoAffectEventRarityWeights</td><td class="def">false</td><td class="desc">Also apply the multipliers to island events that give a guaranteed legendary-or-mythic item (Heavy Safe, Hold your Breath, Mistress of Chaos). Off keeps those at the game's 20% mythic.</td></tr>
+  <tr><td class="key">Fodder, Soldier, Elite, Champion, Boss</td><td class="def">Unc / Rare / Leg / Myth / Myth</td><td class="desc">Best rarity that kind of enemy can drop. The game's own values are Uncommon, Uncommon, Rare, Legendary, Mythic.</td></tr>
+  <tr><td class="key">SummonedEnemiesUseVanillaRolls</td><td class="def">true</td><td class="desc">Summoned enemies and destructible props keep the game's normal drop rules.</td></tr>
+  <tr><td class="key">ChanceMultiplier</td><td class="def">5</td><td class="desc">Multiplier on the chance of named personal drops (a specific enemy's signature item). Guaranteed "pick one" boss rewards are not affected.</td></tr>
+  <tr><td class="key">OnlyTablesWithRarity / EquipmentOnly</td><td class="def">Legendary / true</td><td class="desc">Only boost personal drops that include a piece of gear of at least this rarity, i.e. the named elite/boss items, not themed trash tables and not potion tables (Greater/Super potions count as legendary/mythic in the game's data).</td></tr>
+  <tr><td class="key">Merchant: Enabled, LegendaryWeight, MythicWeight</td><td class="def">true, 60, 40</td><td class="desc">How The Merchant's single equipment slot leans between legendary and mythic. The game uses 70/30.</td></tr>
+  <tr><td class="key">AffectRoguelikeMerchant</td><td class="def">true</td><td class="desc">Apply the same lean to the Roguelike Merchant.</td></tr>
+  <tr><td class="key">Gambling: Enabled + five weights</td><td class="def">true; 15/30/30/20/5</td><td class="desc">Relative odds of each rarity at Ulf's Wager. The game uses 25/50/15/8/2.</td></tr>
+  <tr><td class="key">TownShops: Enabled, Act1Rare, Act1Legendary, Act1Mythic, LegendaryPerAct, MythicPerAct</td><td class="def">true; 94/5/1; 5; 1</td><td class="desc">The town armorer and jeweler in each act sell rare, legendary and mythic gear instead of the game's green/blue only. Odds by act: Act 1 94/5/1, Act 2 88/10/2, Act 3 82/15/3, Act 4 76/20/4. Mythics need character level 5. Potion makers and island vendors are unchanged.</td></tr>
+  <tr><td class="key">LeaveRoguelikeUntouched</td><td class="def">true</td><td class="desc">Switch every change off while playing Roguelike, whose rewards are built by re-rolling the same tables and would become nearly all legendary/mythic.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file in game; write every loot roll to the log.</td></tr>
+</table>
+<p><b>Multiplayer:</b> loot is rolled on each player's own PC, so this only changes drops for players who have the mod.</p>
+</div>
+
+<!-- ===================== 2. DifficultyXP ===================== -->
+<div class="page">
+<h1>XP that scales with difficulty</h1>
+<p class="tag">DifficultyXP &middot; settings in <span class="file">BepInEx\config\stolenrealm.difficultyxp.cfg</span></p>
+<p>The game pays more gold on harder difficulties but the same experience. This mod makes experience follow the same curve as gold: Classic +25%, Veteran +50%, Torturous +75%, Heart of the Realm +100%, Endless +25%. It applies to battle experience, quest-completion experience and, by default, island events that grant experience (which the game never scaled). Temporary gold bonuses on your character, such as the campfire "Prepared" buff, are mirrored into experience the same way. Roguelike is not affected, since it levels you per battle rather than by experience.</p>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Experience bonus equals the difficulty's gold bonus.</td></tr>
+  <tr><td class="key">ExtraMultiplier</td><td class="def">1</td><td class="desc">Extra factor on top. 1 = exactly match gold, 2 = twice that bonus.</td></tr>
+  <tr><td class="key">ScaleEventXP</td><td class="def">true</td><td class="desc">Also scale the experience given by island events.</td></tr>
+  <tr><td class="key">IncludeGoldBuffs</td><td class="def">true</td><td class="desc">Also mirror temporary gold buffs (campfire "Prepared" and similar) into experience.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file in game; log every experience adjustment.</td></tr>
+</table>
+<p><b>Multiplayer:</b> battle experience follows the host's settings; quest and event experience follows your own.</p>
+</div>
+
+<!-- ===================== 3. QoL ===================== -->
+<div class="page">
+<h1>Cheaper upgrades</h1>
+<p class="tag">QoL &middot; settings in <span class="file">BepInEx\config\stolenrealm.qol.cfg</span></p>
+<p>Noor's Materials normally charges the full shop price of the item at its new level, times 1.5, no matter how far behind the item is. So upgrading a piece every couple of levels costs far more overall than one big jump. With this mod the price is the difference between the item's current level and the target level, times the same 1.5, so topping up regularly costs the same in total as waiting.</p>
+
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">CostByLevelGap</td><td class="def">true</td><td class="desc">Charge only the price difference between the item's current level and the target level.</td></tr>
+  <tr><td class="key">CostMultiplier</td><td class="def">1.5</td><td class="desc">Markup on that difference. 1.5 is what the game applies to full-price upgrades.</td></tr>
+  
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file in game; log each upgrade price. This mod also stamps the log with your Steam name so we know whose log we are reading.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 4. TargetTooltip ===================== -->
+<div class="page">
+<h1>"What will this click do?"</h1>
+<p class="tag">TargetTooltip &middot; settings in <span class="file">BepInEx\config\stolenrealm.targettooltip.cfg</span></p>
+<p>In battle, hovering an enemy with the attack cursor, or any valid cell with a skill selected, shows a tooltip for the action a click would fire: the basic attack the game will use, or the selected skill. Under it, when the cell holds an enemy, a preview line reads something like <b>vs Goblin Archer: 71-96 (45-60% of its health)</b>. That is the game's own damage calculation for that exact target, after its resistances, armor, damage reduction and any bonuses you have against it, so you can see before committing whether the hit will finish it. A smaller detail line shows the split by damage type and what reduced it. If the cell has a ground effect (burning ground, poison cloud), its description is folded into the same tooltip under "On this tile" instead of replacing it.</p>
+<div class="hk"><b>Hotkey:</b> <kbd>F10</kbd> flips between the Full style (the game's normal skill tooltip with damage, cost, cooldown and status) and the Compact style (icon and name in a small translucent box). The choice is saved.</div>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Show the tooltip in battle.</td></tr>
+  <tr><td class="key">Style</td><td class="def">Full</td><td class="desc">Full or Compact, as above.</td></tr>
+  <tr><td class="key">ShowOnEmptyCells</td><td class="def">true</td><td class="desc">With a skill selected, also show it on valid cells with no enemy (ground targets, buffs on allies, movement skills).</td></tr>
+  <tr><td class="key">DamagePreview</td><td class="def">true</td><td class="desc">Add the "vs &lt;enemy&gt;" damage line.</td></tr>
+  <tr><td class="key">PreviewDetail</td><td class="def">true</td><td class="desc">Add the small line with the per-type split and the reductions (resist, armor, damage reduction, dodge).</td></tr>
+  <tr><td class="key">IncludeTileEffects</td><td class="def">true</td><td class="desc">Keep the hovered tile's ground-effect description inside the tooltip under "On this tile".</td></tr>
+  <tr><td class="key">StyleToggleKey</td><td class="def">F10</td><td class="desc">The key that flips Full/Compact.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file in game; log every tooltip shown.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 5. SpecialTooltips ===================== -->
+<div class="page">
+<h1>Enemy specials explained</h1>
+<p class="tag">SpecialTooltips &middot; settings in <span class="file">BepInEx\config\stolenrealm.specialtooltips.cfg</span></p>
+<p>Right-click an enemy to open the Examine window. The entries under <i>Passive</i> already had tooltips; the ones under <i>Special</i> (Armored, Unpredictable, Pack Hunter, Undying, Explosive, Volatile and about ninety others) did not, and many of the names are not self-explanatory. With this mod each Special entry can be hovered and shows a plain-language explanation. Where the explanation depends on the enemy, such as how much armor "Armored" grants or how many extra turns "Hasty" gives, the tooltip uses that enemy's real numbers.</p>
+<p>The wording lives in a plain text file next to the settings, <span class="file">stolenrealm.specialtooltips.descriptions.txt</span>, one line per special. Edit it freely if you want different wording; <kbd>F9</kbd> reloads it in game.</p>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Make Special entries hoverable with a tooltip.</td></tr>
+  <tr><td class="key">UnderlineLinks</td><td class="def">false</td><td class="desc">Underline the Special entries so it is obvious they can be hovered.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file and the descriptions file in game; log each tooltip shown.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 6. ScalingTooltips ===================== -->
+<div class="page">
+<h1>Skill scaling shown</h1>
+<p class="tag">ScalingTooltips &middot; settings in <span class="file">BepInEx\config\stolenrealm.scalingtooltips.cfg</span></p>
+<p>Every damage or healing number in a skill, action or status tooltip gets a small grey label saying where it comes from, for example <b>118-159 (0.7x AP)</b>: this skill deals 0.7 times your Attack Power. AP is Attack Power, which comes from your weapon; SP is Spell Power. When the formula names a damage type it is added too, e.g. <b>(0.5x SP, Fire)</b>. This works in the skill trees while you are choosing what to learn, on the action bar, in Examine and in text links, so you can tell at a glance that Garrote (0.8x) hits harder per point than Fracture (0.6x).</p>
+<p>Below the description a <b>Scaling:</b> line shows the whole chain for your character, e.g. <i>Scaling: 0.7 x 142 AP x 1.33 = 132 (112-152) &middot; Power +12%, Physical +21%</i>: the skill's factor, your current stat, every percentage bonus you have (skill power, damage type bonuses from gear, mana power, basic-attack bonus, Might), any flat damage, and the result with the game's normal damage spread. Bonuses at zero are left out.</p>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Add the label after each number.</td></tr>
+  <tr><td class="key">Style</td><td class="def">Short</td><td class="desc">Short = "(0.7x AP)". Full = "(70% Attack Power)".</td></tr>
+  <tr><td class="key">Breakdown</td><td class="def">true</td><td class="desc">Show the "Scaling:" line with the full math.</td></tr>
+  <tr><td class="key">Color</td><td class="def">9AA5B1</td><td class="desc">Colour of the label, as a hex colour code without the #.</td></tr>
+  <tr><td class="key">SizePercent</td><td class="def">80</td><td class="desc">Label size as a percentage of the description text (50 to 120).</td></tr>
+  <tr><td class="key">ShowDamageType</td><td class="def">true</td><td class="desc">Add the damage type when the skill names one. Physical on weapon skills is implied and not shown.</td></tr>
+  <tr><td class="key">ShowRawFormula</td><td class="def">false</td><td class="desc">For the few skills that are not "stat times factor" (flat values, level scaling, armor multiples), show the cleaned-up formula instead of nothing.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file in game; log every formula read.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 7. SharedFortunes ===================== -->
+<div class="page">
+<h1>Fortunes shared across your characters</h1>
+<p class="tag">SharedFortunes &middot; settings in <span class="file">BepInEx\config\stolenrealm.sharedfortunes.cfg</span></p>
+<p>Every fortune any of your characters has ever earned becomes available to all of them, so a new character does not have to farm the same island events again. The mod keeps a pool of every fortune your characters own and the highest level each was earned at (a small file next to your character saves). When a character loads, fortunes they are missing are added to their available list, unequipped, and fortunes they own at a lower level are raised. Which fortunes are slotted stays a per-character choice.</p>
+<ul>
+  <li>Nothing is ever removed or lowered. A friend installing this mod keeps every fortune they already had; their own fortunes simply start their pool.</li>
+  <li>By default a shared fortune is capped at the receiving character's level and grows with them; a level-10 character gets a level-18 fortune at level 10, then 11, 12 and so on as they level.</li>
+  <li>Earning a fortune you already own at the same or a lower level changes nothing; at a higher level it raises it, for every character.</li>
+  <li>Fortune upgrades bought with the Fortune upgrades mod count as earned and spread to your other characters the same way.</li>
+  <li>Only your own characters on your own PC are involved. In co-op your friends' fortunes never enter your pool and yours never reach them.</li>
+</ul>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Share fortunes across your characters.</td></tr>
+  <tr><td class="key">CapToCharacterLevel</td><td class="def">true</td><td class="desc">A shared fortune never exceeds the receiving character's level, and rises as they level. Off gives every character the pool's full level immediately.</td></tr>
+  <tr><td class="key">IncludeRoguelikeCharacters</td><td class="def">false</td><td class="desc">Also share to and from Roguelike characters.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file and rescan all character saves into the pool; log every fortune added or raised.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 8. FortunePreview ===================== -->
+<div class="page dense">
+<h1>Fortune hunting</h1>
+<p class="tag">FortunePreview &middot; settings in <span class="file">BepInEx\config\stolenrealm.fortunepreview.cfg</span></p>
+<p><b>On the campaign map:</b> hovering a quest lists the fortunes you can still earn on that island: every island event that leads to a fortune and is allowed on that quest's terrain, time of day and level, plus the quest's own scripted events. The default compact list is grouped by rarity, names only, and hides everything your current character already owns, so it reads as "what is still worth hunting here". Hold <kbd>Left Shift</kbd> while hovering for the detailed list, one fortune per line, including fortunes you own at a lower level (shown as upgrades).</p>
+<p><b>In the island event window:</b> options that grant a fortune get a "Fortune: &lt;name&gt;" line under their outcome, even when the game hides the outcome or shows "Unknown Effect". Fortunes that come later, from a follow-up event or from winning or losing the fight the option starts, are listed as "Fortune later: &lt;name&gt; (after winning)". Hover the name for the fortune's full tooltip.</p>
+<p><b>On every fortune tooltip:</b> a Source section says which event grants it, where that event can appear (terrain, time of day, minimum level) and on which main quests it can show up, so you can go and get it.</p>
+<p><b>In the Fortune window:</b> after your own fortunes, every fortune you have not found yet is listed greyed out with a "?" level. They cannot be equipped (clicking says so), but hovering shows the full effect at your level plus the Source section, so the window is a catalogue of all 83.</p>
+<div class="hk"><b>Hotkey:</b> hold <kbd>Left Shift</kbd> while hovering a quest for the detailed list.</div>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">QuestSelect: Enabled</td><td class="def">true</td><td class="desc">List earnable fortunes on the quest tooltip.</td></tr>
+  <tr><td class="key">DetailKey</td><td class="def">LeftShift</td><td class="desc">Key to hold for the detailed list.</td></tr>
+  <tr><td class="key">MinRarity</td><td class="def">Common</td><td class="desc">Compact list only shows fortunes of this rarity or better.</td></tr>
+  <tr><td class="key">ShowEventNames</td><td class="def">false</td><td class="desc">Detailed list: also name the event that grants each fortune.</td></tr>
+  <tr><td class="key">MarkOwned</td><td class="def">true</td><td class="desc">Mark fortunes you already own with the level you have them at.</td></tr>
+  <tr><td class="key">HideOwned</td><td class="def">true</td><td class="desc">Leave out fortunes you already own at this quest's level or higher.</td></tr>
+  <tr><td class="key">CompactHideAllOwned</td><td class="def">true</td><td class="desc">Compact list: leave out every fortune you own at any level.</td></tr>
+  <tr><td class="key">CompactSizePercent</td><td class="def">85</td><td class="desc">Text size of the compact list relative to the tooltip.</td></tr>
+  <tr><td class="key">DetailMaxListed</td><td class="def">40</td><td class="desc">Most fortunes shown in the detailed list before "+N more".</td></tr>
+  <tr><td class="key">EventWindow: Enabled</td><td class="def">true</td><td class="desc">Add the "Fortune:" line to event options.</td></tr>
+  <tr><td class="key">RevealHidden</td><td class="def">true</td><td class="desc">Show it even when the option's outcome is hidden or a mystery roll.</td></tr>
+  <tr><td class="key">RevealRolled</td><td class="def">false</td><td class="desc">When an outcome picks one fortune at random from a set, show the one already rolled for this island instead of "one of" the set.</td></tr>
+  <tr><td class="key">ShowChained</td><td class="def">true</td><td class="desc">Also list fortunes that come from the follow-up event or the fight's victory/defeat.</td></tr>
+  <tr><td class="key">SizePercent</td><td class="def">90</td><td class="desc">Text size of the added line relative to the outcome text.</td></tr>
+  <tr><td class="key">SourceInTooltip</td><td class="def">true</td><td class="desc">Add the Source section to every fortune tooltip.</td></tr>
+  <tr><td class="key">MaxQuests</td><td class="def">8</td><td class="desc">Most main quests listed per event before "+N more".</td></tr>
+  <tr><td class="key">ShowUnownedFortunes, UnownedAtCharacterLevel, UnownedOpacityPercent, SortUnownedByRarity, UseDisabledOverlay</td><td class="def">true, true, 35, true, true</td><td class="desc">The greyed-out catalogue in the Fortune window: on/off, show effects at your level or level 1, how faded, mythic-first order, use the slot's own disabled look.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file in game; log what was found for each hovered quest.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 9. FortuneUpgrade ===================== -->
+<div class="page">
+<h1>Fortune upgrades</h1>
+<p class="tag">FortuneUpgrade &middot; settings in <span class="file">BepInEx\config\stolenrealm.fortuneupgrade.cfg</span></p>
+<p>Fortunes are earned at the level of the island you found them on and normally stay there. This mod lets you pay gold to raise a fortune to your character's current level, the way you upgrade an item at Noor's. In town, open the Fortune window, hover a fortune and its tooltip shows a line such as <b>Upgrade to L17: 25,920 gold (press U)</b>. Press <kbd>U</kbd>, confirm, and the fortune is raised and the gold taken from your party. If it cannot be upgraded right now the tooltip says why (already at your level, not in town, in battle).</p>
+<p>The price is exactly what a two-handed weapon of the same rarity would cost to upgrade between those levels, times the game's usual 1.5 upgrade markup, and you only pay for the levels gained: raising a fortune from 20 to 30 costs less than from 1 to 30. A mythic fortune taken all the way to level 30 is a serious purchase; a common one is pocket change. With the Fortunes-shared mod installed, an upgrade spreads to your other characters too.</p>
+<div class="hk"><b>Hotkey:</b> <kbd>U</kbd> while hovering a fortune in the Fortune window (in town).</div>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Allow paid fortune upgrades.</td></tr>
+  <tr><td class="key">UpgradeKey</td><td class="def">U</td><td class="desc">The key to press while hovering a fortune.</td></tr>
+  <tr><td class="key">OnlyInTown</td><td class="def">true</td><td class="desc">Only in town, like item upgrades. Off allows it anywhere outside battle.</td></tr>
+  <tr><td class="key">CostByLevelGap</td><td class="def">true</td><td class="desc">Pay only for the levels gained. Off charges the full price at your level.</td></tr>
+  <tr><td class="key">CostMultiplier</td><td class="def">1.5</td><td class="desc">Markup on the weapon price. 1.5 matches the game's item upgrades.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file in game; log every price and upgrade.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 10. LevelSync ===================== -->
+<div class="page">
+<h1>Levels shared across your characters</h1>
+<p class="tag">LevelSync &middot; settings in <span class="file">BepInEx\config\stolenrealm.levelsync.cfg</span></p>
+<p>Every character you own is kept at the level of your highest character, so alts are always ready to play alongside your main. When a character loads at a lower level it is raised to the account's highest, with the skill points and stat points that level brings (the game works those out from level, so they simply appear, unspent). Health and mana keep their percentages, exactly as a normal level-up does. While playing, experience earned by one character keeps the rest of your party at the same level after each reward; each member still earns its own share, the sync only tops up whoever ended lower.</p>
+<ul>
+  <li>Levels are never lowered, and nothing goes above the game's cap of 30.</li>
+  <li>A brand-new character is left alone on the creation screen (normal starting points) and raised the first time it enters the game.</li>
+  <li>Roguelike characters are left out by default, since that mode levels you per battle.</li>
+  <li>Only your own characters count. In co-op, a friend's higher-level character never changes yours, and your level never changes theirs.</li>
+  <li>A small file next to your saves shows the current highest level and which character set it.</li>
+</ul>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Keep every character at the account's highest level.</td></tr>
+  <tr><td class="key">IncludeRoguelikeCharacters</td><td class="def">false</td><td class="desc">Also sync Roguelike characters, in both directions.</td></tr>
+  <tr><td class="key">MaxLevel</td><td class="def">30</td><td class="desc">Never raise a character above this level.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file and rescan all character saves; log every level check and raise.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 11. AutoSalvage ===================== -->
+<div class="page">
+<h1>Junk auto-sold, materials auto-stored</h1>
+<p class="tag">AutoSalvage &middot; settings in <span class="file">BepInEx\config\stolenrealm.autosalvage.cfg</span></p>
+<p>The moment loot lands in your bags (battle loot, chests, event rewards) the rules run <b>on the items that just arrived</b> and a short message appears over your character, e.g. <b>+340 gold, sold 4, stashed 2</b>. You still see the loot in the post-battle list; it just never clutters the bag. The rest of the bag is never judged, so a blue you bought and left unequipped survives the next drop.</p>
+<ul>
+  <li><b>Equipment</b> (weapons, shields, head, armor, rings, amulets): white, green and blue pieces are sold at the normal shop sell price, each rarity with its own switch. <b>Legendary and mythic pieces are always kept.</b> Optional exception: keep blues at or above your level.</li>
+  <li><b>Trade commodities</b> are sold, whatever their rarity, except the ones any crafting recipe uses (Animal Hide, Wild Soul, Fire Core, drake scales, Cursed Coin and so on), which go to storage instead so recipes stay craftable.</li>
+  <li><b>Crafting materials</b> go straight to your storage. They are never sold.</li>
+  <li><b>Never touched:</b> anything equipped, consumables, tools, quest items, anything you bought at a shop, crafted, won at Ulf's, moved between characters, took out of storage, received from a friend, picked as a Roguelike level-up reward, or a new character's starting kit.</li>
+  <li><b>One-time cleanup:</b> the first launch tidies what is already in every character's bag (unequipped items only), then turns that setting off by itself. Set it to true again to repeat it.</li>
+  <li>Roguelike mode and Roguelike characters are left alone.</li>
+</ul>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Run the rules on incoming loot.</td></tr>
+  <tr><td class="key">SellCommonEquipment / SellUncommonEquipment / SellRareEquipment</td><td class="def">true / true / true</td><td class="desc">Sell white, green, blue equipment.</td></tr>
+  <tr><td class="key">KeepRareAtOrAboveMyLevel</td><td class="def">false</td><td class="desc">Keep a blue whose item level is at or above your character's level.</td></tr>
+  <tr><td class="key">SellCommodities</td><td class="def">true</td><td class="desc">Sell trade commodities of any rarity.</td></tr>
+  <tr><td class="key">RecipeCommoditiesToStash</td><td class="def">true</td><td class="desc">Commodities that any recipe needs go to storage instead of being sold.</td></tr>
+  <tr><td class="key">MaterialsToStash</td><td class="def">true</td><td class="desc">Crafting materials go to storage.</td></tr>
+  <tr><td class="key">SweepBagsOnLoad</td><td class="def">true</td><td class="desc">One-time cleanup of existing bags on the next launch; switches itself to false afterwards.</td></tr>
+  <tr><td class="key">OverheadSummary</td><td class="def">true</td><td class="desc">Show the "+gold, sold, stashed" message over the character.</td></tr>
+  <tr><td class="key">LeaveRoguelikeUntouched</td><td class="def">true</td><td class="desc">Do nothing in Roguelike mode or for Roguelike characters.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file in game; log every item sold or stored.</td></tr>
+</table>
+<p><b>Multiplayer:</b> loot is rolled and delivered on each player's own PC, so this only ever sells or stores your own drops, and only credits your own gold.</p>
+</div>
+
+<!-- ===================== 13. ThreatOverlay ===================== -->
+<div class="page">
+<h1>Threat overlay</h1>
+<p class="tag">ThreatOverlay &middot; settings in <span class="file">BepInEx\config\stolenrealm.threatoverlay.cfg</span></p>
+<p>In battle, hold <kbd>Left Alt</kbd> and the map shows what the enemies can do on their next turn. Every hex an enemy can move to is tinted red, using the game's own movement rules (its movement points, terrain and height, blocked hexes, slowing or blocking ground effects; a rooted enemy gets no red at all). Every hex an enemy could attack from any of those positions is tinted orange, using its longest attack range: weapon range for melee, the longest harmful skill for casters and archers. Release the key and the map goes back to normal, with your own movement and targeting highlights intact.</p>
+<p>Use it before committing a move: a hex with no tint is one nobody can reach or hit next turn, an orange hex means somebody can hit you there, and a red hex is where enemies will be able to stand. Everything is computed on your own PC from what you can already see; nothing is changed in the game and nothing is sent to other players.</p>
+<p><b>Limits:</b> skill ranges are treated as a plain radius (long lines and blast shapes are not drawn), and enemies that teleport or dash are shown by their walking range only.</p>
+<div class="hk"><b>Hotkey:</b> hold <kbd>Left Alt</kbd> in battle. Change it with <span class="file">HoldKey</span>.</div>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Show the overlay while the key is held.</td></tr>
+  <tr><td class="key">HoldKey</td><td class="def">LeftAlt</td><td class="desc">The key to hold.</td></tr>
+  <tr><td class="key">Mode</td><td class="def">AllEnemies</td><td class="desc">AllEnemies shows every living enemy at once; HoveredEnemy only the one under the mouse.</td></tr>
+  <tr><td class="key">ShowReach / ShowStrike</td><td class="def">true / true</td><td class="desc">Tint where enemies can move; tint where they can hit from there.</td></tr>
+  <tr><td class="key">IncludeSkillRanges</td><td class="def">true</td><td class="desc">Use the longest harmful skill range rather than the weapon alone.</td></tr>
+  <tr><td class="key">ReachColor / StrikeColor</td><td class="def">C83232 / E08A3C</td><td class="desc">Colours as hex codes without the #.</td></tr>
+  <tr><td class="key">RefreshSeconds</td><td class="def">0.25</td><td class="desc">How often the overlay is recomputed while held.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file in game; log each recomputation.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 17. NumberFormat ===================== -->
+<div class="page">
+<h1>Readable numbers</h1>
+<p class="tag">NumberFormat &middot; settings in <span class="file">BepInEx\config\stolenrealm.numberformat.cfg</span></p>
+<p>The game never puts separators in its numbers, so 418218 gold and a 12500 damage tooltip take a second look. This mod formats every number as it is handed to the screen: <b>418,218</b>, <b>12,500</b>. It works on all text at once (gold, health, damage floats, XP, shop prices, tooltips, the battle stats window), so nothing is missed and nothing in the game's rules changes.</p>
+<ul>
+  <li>Only plain numbers of four digits or more are touched. Codes with letters in them, lobby codes, dates, times, colour codes inside text and the decimals of a number like 12.5% are left as they are.</li>
+  <li>Anything you type into a box (chat, search bars, gold amounts) is never reformatted.</li>
+  <li>Prefer a dot or a space instead of a comma? Change <span class="file">Separator</span>.</li>
+</ul>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Format numbers.</td></tr>
+  <tr><td class="key">Separator</td><td class="def">,</td><td class="desc">The character inserted between thousands.</td></tr>
+  <tr><td class="key">MinDigits</td><td class="def">4</td><td class="desc">Shortest number that gets separators (4 = 1,000 and up).</td></tr>
+  <tr><td class="key">SkipInputFields</td><td class="def">true</td><td class="desc">Never touch text inside input boxes.</td></tr>
+  <tr><td class="key">IncludeLegacyText</td><td class="def">true</td><td class="desc">Also format the game's few old-style labels.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file; log the first reformatted texts after launch.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 16. SharedProgress ===================== -->
+<div class="page">
+<h1>Campaign progress shared across your characters</h1>
+<p class="tag">SharedProgress &middot; settings in <span class="file">BepInEx\config\stolenrealm.sharedprogress.cfg</span></p>
+<p>The game keeps campaign progress per character: which quests and towns you have completed, how far into the story you are (which act), the highest quest level you have finished and how good the shops' stock is. A new character normally starts over in Act 1. With this mod every campaign character has your most advanced character's progress: a fresh character loads into the same town, sees the same quest map with the same quests done and unlocked, can pick the same quest levels and finds the same shop stock. Quests you finish with any character count for all of them.</p>
+<ul>
+  <li><b>Nothing is ever taken away.</b> The mod only adds completed quests and raises numbers; a character ahead of the others is never pulled back.</li>
+  <li>A character that catches up will not see the "New Act Unlocked!" or "Campaign Completed!" pop-ups again when it replays those quests, exactly like a veteran character replaying them in the normal game. Achievements are only ever granted by really completing quests.</li>
+  <li>Roguelike characters are left out entirely; Roguelike has its own progression.</li>
+  <li>Only your own characters on your own PC. In co-op your friends' progress is never read or changed.</li>
+  <li>A small file next to your saves (<span class="file">SharedProgress.json</span>) holds the combined progress so a deleted character never costs the others anything.</li>
+</ul>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Share campaign progress across your campaign characters.</td></tr>
+  <tr><td class="key">ShareQuestMap</td><td class="def">true</td><td class="desc">Completed quests and towns on the quest map, and the story progress that decides the act.</td></tr>
+  <tr><td class="key">ShareActAndShops</td><td class="def">true</td><td class="desc">The town you start in, the highest quest level you can pick, and the shop stock level.</td></tr>
+  <tr><td class="key">IncludeRoguelikeCharacters</td><td class="def">false</td><td class="desc">Also include Roguelike characters (not recommended).</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file and rescan the saves; log every merge.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 15. ModMenu ===================== -->
+<div class="page">
+<h1>Mod window</h1>
+<p class="tag">ModMenu &middot; settings in <span class="file">BepInEx\config\stolenrealm.modmenu.cfg</span></p>
+<p>Press <kbd>F9</kbd> anywhere in the game and a window lists every mod in this pack with a checkbox, plus one for verbose logging. Tick the ones you want, untick the ones you don't, press <b>Apply</b>: the file behind it (<span class="file">stolenrealm.mods.cfg</span>) is written and every mod switches on or off on the spot. <b>Cancel</b> or <kbd>Esc</kbd> closes it without changing anything. Hover a row to read what the mod does.</p>
+<ul>
+  <li>Nothing needs a restart today. If a future mod does, its row says <i>(restart required)</i> and Apply tells you.</li>
+  <li>Switching a mod off never undoes what it already did: levels, gold and fortunes that were shared stay where they are.</li>
+  <li>A mod that is not installed shows <i>(not installed)</i> and cannot be ticked.</li>
+  <li>If you switch this window itself off, <kbd>F9</kbd> goes back to simply re-reading the config files.</li>
+</ul>
+<div class="hk"><b>Hotkey:</b> <kbd>F9</kbd> opens and closes the window. Change it with <span class="file">OpenKey</span>.</div>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Use the window. Off = F9 reloads config files directly, as before.</td></tr>
+  <tr><td class="key">OpenKey</td><td class="def">F9</td><td class="desc">The key that opens and closes the window.</td></tr>
+  <tr><td class="key">ShowDescriptions</td><td class="def">true</td><td class="desc">One line under each mod name saying what it does.</td></tr>
+  <tr><td class="key">CloseOnApply</td><td class="def">true</td><td class="desc">Close the window after Apply.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Same key as OpenKey; log what the window does.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 14. BattleStats ===================== -->
+<div class="page">
+<h1>Battle stats that add up</h1>
+<p class="tag">BattleStats &middot; settings in <span class="file">BepInEx\config\stolenrealm.battlestats.cfg</span></p>
+<p>After every fight the game's <b>Stats</b> button shows damage dealt, taken, blocked and healed per character. It already counts poison and burn ticks inside Damage Dealt, but it never says where the damage came from, so a nature build whose enemies die walking through poison tiles looks like it did nothing. This mod records every hit while the fight is resolved and adds four sections to that window, in the same style, below the game's own rows, and the table scrolls (mouse wheel, drag, or the slim bar on the right):</p>
+<ul>
+  <li><b>Damage Breakdown:</b> Direct Hits, Over Time (poison, burn, bleed ticks), Ground Tiles (tiles someone walked into or stood on), Summons, Thorns.</li>
+  <li><b>Hits:</b> Hits / Crits with the crit rate, Kills / Overkill, Biggest Hit with the skill that did it, Best Skill with its total, Damage Per Turn.</li>
+  <li><b>Damage By Element:</b> Physical, Fire, Cold, Lightning, Shadow, Holy.</li>
+  <li><b>Activity:</b> Casts (free actions in brackets), Mana Spent, Hexes Moved, Taken From Ticks.</li>
+</ul>
+<p>Hover a character's name at the top of the window for a tooltip with their top damage sources (skill or status, total, number of hits), or hover any damage number in the table to see which abilities made up that number for that character. A kill by a poison tick counts for whoever applied the poison; a summon's damage counts for its master, as the game already does.</p>
+<p><b>Multiplayer:</b> the fight is resolved on the host's PC, so the host needs the mod for anything to be recorded; everyone with the mod then sees the same numbers. If the host has no mod the new rows show <i>n/a</i>. Nothing is changed about the fight itself.</p>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Record battles.</td></tr>
+  <tr><td class="key">LogEveryHit</td><td class="def">true</td><td class="desc">One log line per hit, heal, block, kill and cast (useful when a number looks wrong). Off keeps only the end-of-battle summary.</td></tr>
+  <tr><td class="key">WriteJson</td><td class="def">false</td><td class="desc">Also write a BepInEx\BattleStats\battle-&lt;date&gt;.json file per fight.</td></tr>
+  <tr><td class="key">TopSkills</td><td class="def">8</td><td class="desc">How many skills to list per character in the log summary.</td></tr>
+  <tr><td class="key">ShowInWindow</td><td class="def">true</td><td class="desc">Add the rows to the Stats window. Off = vanilla window, log only.</td></tr>
+  <tr><td class="key">ShowBreakdown / ShowHits / ShowElements / ShowActivity</td><td class="def">true</td><td class="desc">Each section on or off.</td></tr>
+  <tr><td class="key">TopSkillsTooltip</td><td class="def">true</td><td class="desc">The hover-the-name tooltip.</td></tr>
+  <tr><td class="key">CellTooltips</td><td class="def">true</td><td class="desc">Hover any damage number for its per-ability breakdown.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file in game; log what the mod does. DebugHooks (false) is developer spam only.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 12. SharedGold ===================== -->
+<div class="page">
+<h1>One gold purse for all your characters</h1>
+<p class="tag">SharedGold &middot; settings in <span class="file">BepInEx\config\stolenrealm.sharedgold.cfg</span></p>
+<p>All the gold your campaign characters hold is treated as one purse. Whoever you are playing holds all of it, so a solo character or a full party always sees and can spend the whole balance, and gold earned by one character is there for the next. The first time the mod runs it simply gathers what your characters already had; the total is exactly the sum of their purses, nothing gained and nothing lost. Switching characters moves the purse with you.</p>
+<ul>
+  <li><b>It cannot create or destroy gold.</b> It only moves gold between your own characters, and the sum is preserved by construction. Loot, quest rewards, shop spending, fortune upgrades and sending gold to a friend all work as normal and change the purse by exactly their amount.</li>
+  <li>Roguelike characters are left out entirely. Hardcore characters share the purse unless you switch that off.</li>
+  <li>A party of two of your own characters shows the purse once, not twice.</li>
+  <li>Only your own characters on your own PC are touched. In co-op your friends' gold is never read or changed, and sending gold to them works exactly as before.</li>
+  <li>Every move is written to both characters' save files on the spot and checked; if a file cannot be written the move is undone, so a character you never play that session can never keep a stale purse on disk.</li>
+  <li>Removing the mod leaves the whole purse on whichever character held it last; nothing is lost. A small file next to your saves shows the current total and who holds it.</li>
+</ul>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Pool gold across your campaign characters.</td></tr>
+  <tr><td class="key">IncludeHardcoreCharacters</td><td class="def">true</td><td class="desc">Hardcore characters share the purse with normal ones. Off keeps their gold separate.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file in game and re-gather the purse; log every move.</td></tr>
+</table>
+<h2>Turning things off</h2>
+<p>Every mod has an <b>Enabled</b> line in its own file, and all twelve have a master line in <span class="file">BepInEx\config\stolenrealm.mods.cfg</span>. Change a line to <b>false</b>, press <kbd>F9</kbd> in game, and that mod is completely off until you turn it back on. No restart needed.</p>
+</div>
+</body>
+</html>
