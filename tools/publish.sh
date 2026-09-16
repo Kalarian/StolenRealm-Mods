@@ -21,6 +21,9 @@ cd ../..
 git add -A
 git commit -q -m "Release v$VER: $NOTES" || echo "(nothing new to commit)"
 git tag -f "v$VER"
-git push -q origin main --tags
+git push -q origin main
+git push -q -f origin "v$VER"   # -f: a tag that already exists on GitHub (re-release) is moved, not rejected
+"$GH" release delete "v$VER" --yes --cleanup-tag 2>/dev/null || true   # re-publishing the same version replaces the release
+git push -q -f origin "v$VER"
 "$GH" release create "v$VER" "mods/StolenRealm-Mods-install.zip" "mods/share/Install Stolen Realm Mods.exe" "mods/share/SHA256SUMS.txt" "mods/share/Stolen Realm Mods - Read Me.pdf" --title "Stolen Realm Mods v$VER" --notes "$NOTES"
 echo "Published v$VER: https://github.com/Kalarian/StolenRealm-Mods/releases/tag/v$VER"
