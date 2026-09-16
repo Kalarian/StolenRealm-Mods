@@ -231,7 +231,7 @@ Test1..Test6 were generated with an EMPTY quest list, so they are the perfect te
 - [x] Untick Verbose logging, Apply: each plugin logs `VerboseLogging = False`; tick, Apply: back to True.
 - [x] Edit a per-mod cfg in Notepad, F9, Apply with no box changed: the edit is picked up (`Config reloaded` lines, "(no mod changed; configs re-read)" in the ModMenu line).
 - [x] `stolenrealm.mods.cfg` after Apply still has the header comments, one line per mod and the VerboseLogging line.
-- [x] **[NEW]** (2026-09-16) The window is about 40% taller than before, the title "Stolen Realm Mods" and its subtitle show at the top (they never drew before: swapped offsets), the list fills the middle (325 px, was 204), a grey hint just above the buttons says the menu has no box of its own; no "Mod menu" row anywhere in the list; Apply keeps `ModMenu = true` in the file.
+- [x] **[NEW]** (2026-09-16) The window is about 40% taller than before, the title "Stolen Realm Mods" and its subtitle show at the top (they never drew before: swapped offsets), the list fills the middle (335 px, was 204), a grey hint just above the buttons says the menu has no box of its own; no "Mod menu" row anywhere in the list; Apply keeps `ModMenu = true` in the file.
 - [x] Set `ModMenu = false` in the file with Notepad, F9: no window, plugins reload directly like before. Set true, F9: window back.
 - [x] Typing F9 into chat, the Fortune search or inventory search: no window opens.
 - [x] Main menu (no character loaded): F9 either opens the window (Escape closes) or logs "no UI container found yet"; no error.

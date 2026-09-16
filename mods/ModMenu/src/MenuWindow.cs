@@ -21,7 +21,7 @@ namespace ModMenu
     internal static class MenuWindow
     {
         private const string MenuFlag = "stolenrealm.mods.menu";
-        private const float PanelWidth = 620f, RowHeight = 34f, HeaderHeight = 100f, FooterHeight = 96f, ListHeight = 325f; // 2026-09-16: window 521 tall, the list takes all but the title block and the hint + buttons
+        private const float PanelWidth = 620f, RowHeight = 34f, HeaderHeight = 90f, FooterHeight = 96f, ListHeight = 335f; // 2026-09-16: window 521 tall, the list takes all but the title block and the hint + buttons
         private const string SelfName = "ModMenu";      // never listed: the menu cannot switch itself off (edit stolenrealm.mods.cfg by hand)
         private static ScrollRect _scroll;
 
@@ -152,9 +152,9 @@ namespace ModMenu
 
             // title + subtitle
             TextMeshProUGUI title = MakeText(prt, "Title", "Stolen Realm Mods", _fontTitle, 20, new Color32(0xCB, 0xB3, 0x96, 0xFF), TextAlignmentOptions.Center);
-            Place(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, -48f), new Vector2(0f, -16f));
+            Place(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, -32f), new Vector2(0f, 0f));
             TextMeshProUGUI sub = MakeText(prt, "Subtitle", "Tick the mods you want, then Apply. Changes take effect immediately; nothing is undone that a mod already did.", _fontBody, 11, new Color32(0x9A, 0xA5, 0xB1, 0xFF), TextAlignmentOptions.Center);
-            Place(sub.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20f, -94f), new Vector2(-20f, -52f));
+            Place(sub.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20f, -84f), new Vector2(-20f, -40f));
 
             // rows: a masked, scrolling list ListHeight tall
             var viewportGo = new GameObject("Viewport", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(RectMask2D), typeof(ScrollRect));
