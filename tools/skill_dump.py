@@ -542,9 +542,7 @@ for tree, items in trees.items():
     items.sort(key=lambda t: (t[0], t[1], t[2]["SkillName"]))
     note = ""
     if tree == "Bard":
-        note = ("
-
-**UNRELEASED (2026-09-16):** the Bard tree is the BardPack DLC (DlcType.BardPack). SkillTreeManager only shows the "
+        note = ("\n\n**UNRELEASED (2026-09-16):** the Bard tree is the BardPack DLC (DlcType.BardPack). SkillTreeManager only shows the "
                 "Chaos and Bard tabs when `!SteamManager.IsSkillTypeHidden(type)`, and DLCInfo.Hidden is documented as 'Unreleased: hide "
                 "the skill tree tab and block the skills for everyone'. The tab is absent in the live game, so nothing here is playable yet; "
                 "the assets are complete and will apply when the pack ships.")
