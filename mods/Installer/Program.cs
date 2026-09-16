@@ -175,9 +175,12 @@ namespace Installer
                 string json;
                 using (var wc = new System.Net.WebClient())
                 {
+                    // never answer from the WinINet cache: GitHub allows 60 s of caching and "latest" must be current
+                    wc.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore);
                     wc.Headers.Add("User-Agent", "StolenRealmModsInstaller");
                     wc.Headers.Add("Accept", "application/vnd.github+json");
-                    json = wc.DownloadString(Api);
+                    wc.Headers.Add("Cache-Control", "no-cache");
+                    json = wc.DownloadString(Api + "?t=" + DateTime.UtcNow.Ticks);
                 }
                 var m = Regex.Match(json, "\"tag_name\"\\s*:\\s*\"v?([0-9][0-9.]*)\"");
                 if (!m.Success) { log.AppendLine("Online check: no release found."); return null; }
@@ -216,6 +219,7 @@ namespace Installer
                 string tmp = Path.Combine(Path.GetTempPath(), "StolenRealm-Mods-" + l.Version + ".zip");
                 using (var wc = new System.Net.WebClient())
                 {
+                    wc.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore);
                     wc.Headers.Add("User-Agent", "StolenRealmModsInstaller");
                     wc.DownloadFile(l.ZipUrl, tmp);
                     if (l.SumsUrl != null)
