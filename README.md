@@ -11,12 +11,12 @@ author's machine and are not part of this repository). Licence: GPL-3.0 (TargetT
 
 ---
 
-# Stolen Realm extracted data (build 2025-06-17, Steam buildid 20244830, Unity 2022.3.10f1)
+# Stolen Realm extracted data (build 2026-09-15, Steam buildid 25240684, Unity 2022.3.62f2; previous extract kept in data_20244830/)
 
 - data/tree_<Tree>.md   : per-tree skill tables (tier, active/free action, mana ratio, cooldown, effects) generated from resources.assets
 - data/*.json           : raw MonoBehaviour dumps (SkillInfo, ActionInfo, ActionStatusInfo, CharacterAttribute, items)
 - decomp/               : Assembly-CSharp decompiled with ilspycmd (GlobalSettings.cs has all balance constants). CURRENT = Steam build 25240684 (2026-09-15, Unity 2022.3.62); the previous build (20244830, 2025-06-17, Unity 2022.3.10) is kept in decomp_20244830/. `python tools/diff_patched_methods.py` diffs every method the mods patch between the two. Game updates need BepInEx.cfg `[Preloader.Entrypoint] Type = MonoBehaviour` (with the default `Application` the 2026-09 build destroys the plugin objects 0.4 s after startup and every mod silently unpatches itself).
-- tools/                : extraction pipeline. Order: fast_classes.py -> dump2.py <ClassNames> -> make_tables.py
+- tools/                : extraction pipeline. Order (run inside data/): fast_classes.py -> dump2.py <ClassNames> -> then from the root: skill_dump.py (writes data/skills/: one md per tree with every action, status, ground effect, summon and trigger resolved inline, plus INDEX.md, ACTIONS.md and STATUSES.md keyed by the runtime indices BattleStats logs). Since the 2026-09 build the MonoScripts live in globalgamemanagers.assets (fast_classes follows the externals table)
   Requires: pip install UnityPy TypeTreeGeneratorAPI ; dotnet tool install -g ilspycmd
 
 Verified mechanics. NOTE: the live values come from the GlobalSettings asset (data/GlobalSettings.json), which OVERRIDES the C# field defaults in decomp/GlobalSettings.cs. Always trust the JSON.
