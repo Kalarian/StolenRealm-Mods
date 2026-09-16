@@ -17,3 +17,5 @@ mods/share/*.exe
 mods/share/*.tmp.pdf
 mods/share/SHA256SUMS.txt
 mods/Installer/install-log.txt
+
+tools/extract_log.txt
