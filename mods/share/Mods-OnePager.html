@@ -65,6 +65,7 @@
   <tr><td class="name">Junk auto-sold</td><td class="what">White, green and blue equipment and trade commodities are sold the moment they drop (you see "+340 gold, sold 4" over your character); crafting materials, and commodities any recipe needs, go straight to storage. Legendaries, mythics, consumables and anything you bought or crafted are never touched. Each rarity has its own switch in the config.</td></tr>
   <tr><td class="name">Fortune upgrades</td><td class="what">In town, open the Fortune window, hover a fortune and press <kbd>U</kbd> to raise it to your level for gold. Priced like upgrading a two-handed weapon of the same rarity, and you only pay for the levels gained.</td></tr>
   <tr><td class="name">Readable numbers</td><td class="what">Every number the game shows gets thousands separators: 418218 gold reads 418,218, a 1250 hit reads 1,250. Codes, dates, colours and anything you type are left alone.</td></tr>
+  <tr><td class="name">Bard tree preview</td><td class="what">The game files already contain the complete Bard skill tree (31 skills), hidden as an unreleased DLC. This mod shows the tab and lets you learn and use the skills, exactly the way the game's own test harness unlocks it. It only works while the pack is unreleased: the day the Bard Pack is sold, the mod does nothing and the normal purchase check applies. Everyone in a co-op session needs the pack installed, or they will not see your Bard skills.</td></tr>
   <tr><td class="name">Mod window</td><td class="what">Press <kbd>F9</kbd> in game for a window with a checkbox per mod. Tick, untick, Apply: the mods switch on or off right away, no restart, no config files to edit.</td></tr>
   <tr><td class="name">Battle stats that add up</td><td class="what">The post-battle Stats window gains a damage breakdown (direct, poison/burn ticks, ground tiles, summons, thorns), crit rate, kills, biggest hit, best skill, damage by element, casts and mana. Hover a name for that character's top skills.</td></tr>
   <tr><td class="name">Threat overlay</td><td class="what">In battle, hold <kbd>Left Alt</kbd>: hexes enemies can walk to next turn go red, hexes they could hit from there go orange. Release to clear.</td></tr>
@@ -349,6 +350,24 @@
   <tr><td class="key">SkipInputFields</td><td class="def">true</td><td class="desc">Never touch text inside input boxes.</td></tr>
   <tr><td class="key">IncludeLegacyText</td><td class="def">true</td><td class="desc">Also format the game's few old-style labels.</td></tr>
   <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file; log the first reformatted texts after launch.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 18. BardPreview ===================== -->
+<div class="page">
+<h1>Bard tree preview</h1>
+<p class="tag">BardPreview &middot; settings in <span class="file">BepInEx\config\stolenrealm.bardpreview.cfg</span></p>
+<p>The September 2026 update shipped a complete fourteenth skill tree, <b>Bard</b> (31 skills: songs, harmony stacks for allies, taunts, counter-melodies), but keeps it hidden because it belongs to a DLC that has not been released yet. The game contains its own switch for previewing such a tree, used by the developers' tests; this mod flips that switch. Open the skill tree and the Bard tab sits after Chaos, with the usual tooltips and the free town respec to try it.</p>
+<ul>
+  <li><b>Unreleased only.</b> The unlock works only while the game itself marks the pack as hidden. Once the Bard Pack is on sale, the mod does nothing for it and the game's normal purchase check applies. There is no setting to change that.</li>
+  <li><b>Co-op:</b> every player's game decides on its own which skills a character has. A friend without this pack sees your character without its Bard skills, so make sure everyone runs the installer.</li>
+  <li><b>Turning it off later:</b> Bard skills you learned stay in the save but become invisible and their points stay spent. Respec in town while the mod is still on before switching it off.</li>
+</ul>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Unlock the hidden trees listed below.</td></tr>
+  <tr><td class="key">Trees</td><td class="def">Bard</td><td class="desc">Which hidden trees to preview (only trees the game locks behind an unreleased DLC count).</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file; log each DLC check the mod answers.</td></tr>
 </table>
 </div>
 

@@ -4,15 +4,15 @@ using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using AutoSalvage.Patches;
+using BardPreview.Patches;
 
-namespace AutoSalvage
+namespace BardPreview
 {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-    public class AutoSalvagePlugin : BaseUnityPlugin
+    public class BardPreviewPlugin : BaseUnityPlugin
     {
         internal static ManualLogSource Log;
-        internal static AutoSalvageConfig Cfg;
+        internal static BardPreviewConfig Cfg;
         private Harmony _harmony;
         private bool _patched;
         private int _reloadSeen;
@@ -21,7 +21,7 @@ namespace AutoSalvage
         {
             Log = Logger;
             MasterConfig.LogSessionStartOnce(Log);
-            Cfg = new AutoSalvageConfig(Config);
+            Cfg = new BardPreviewConfig(Config);
             _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
             MasterConfig.Load();
             _reloadSeen = MasterConfig.ReloadToken;
@@ -40,7 +40,7 @@ namespace AutoSalvage
         private void ApplyPatches()
         {
             if (_patched) return;
-            Type[] containers = { typeof(SalvagePatches) };
+            Type[] containers = { typeof(PreviewPatches) };
             foreach (Type container in containers)
             {
                 foreach (Type nested in container.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic))
@@ -63,7 +63,8 @@ namespace AutoSalvage
         private void RemovePatches()
         {
             if (!_patched) return;
-            SalvagePatches.Reset();
+            PreviewPatches.Reset();
+            PreviewPatches.DirtySkillCaches("mod switched off");
             int n = _harmony.GetPatchedMethods().Count();
             _harmony.UnpatchSelf();
             _patched = false;
@@ -79,7 +80,7 @@ namespace AutoSalvage
 
         private void Update()
         {
-            if (_patched) { try { SalvagePatches.Tick(); } catch { } }
+            if (_patched) { try { PreviewPatches.Tick(); } catch (Exception e) { if (Cfg != null && Cfg.Verbose.Value) Log.LogWarning("Tick: " + e); } }
             bool reloadKey = Cfg != null && Cfg.ReloadKey.Value.IsDown() && !MasterConfig.MenuPresent; // with the mod menu present, F9 opens the window and Apply reloads
             if (reloadKey || MasterConfig.ReloadRequested(ref _reloadSeen))
             {
@@ -89,6 +90,7 @@ namespace AutoSalvage
                 bool want = MasterConfig.Enabled(PluginInfo.PLUGIN_NAME);
                 if (want && !_patched) ApplyPatches();
                 else if (!want && _patched) RemovePatches();
+                PreviewPatches.Refresh();
                 Log.LogInfo("Config reloaded (" + MasterConfig.Summary() + ")");
                 Cfg.LogSummary(Log);
             }

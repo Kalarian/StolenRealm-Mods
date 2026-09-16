@@ -6,7 +6,7 @@ Legend: every item below was verified in game by 2026-09-16 (all boxes ticked). 
 
 **Game update 2026-09-15 (Steam build 25240684, Unity 2022.3.62):** with the old BepInEx.cfg every mod silently switched itself off 0.4 s after launch (log: `patches removed - mod is OFF` right after `Chainloader startup complete`). The new pack ships BepInEx.cfg with `[Preloader.Entrypoint] Type = MonoBehaviour`; the installer always replaces that file. Check after installing: the log must NOT contain `patches removed` lines at startup, and must contain `Log owner: Steam '<name>'`.
 
-Before starting: launch the game once and confirm the log has `Loading [X 1.0.0]` for all seventeen plugins (AutoSalvage, BattleStats, DifficultyXP, DropRates, FortunePreview, FortuneUpgrade, LevelSync, ModMenu, NumberFormat, QoL, ScalingTooltips, SharedFortunes, SharedGold, SharedProgress, SpecialTooltips, TargetTooltip, ThreatOverlay) and no `[Error` lines.
+Before starting: launch the game once and confirm the log has `Loading [X 1.0.0]` for all eighteen plugins (AutoSalvage, BardPreview, BattleStats, DifficultyXP, DropRates, FortunePreview, FortuneUpgrade, LevelSync, ModMenu, NumberFormat, QoL, ScalingTooltips, SharedFortunes, SharedGold, SharedProgress, SpecialTooltips, TargetTooltip, ThreatOverlay) and no `[Error` lines.
 
 ---
 
@@ -218,6 +218,15 @@ Test1..Test6 were generated with an EMPTY quest list, so they are the perfect te
 - [x] Verbose log: the first 40 `Formatted: '...' -> '...'` lines look sane (no codes or tags touched).
 - [x] Mod menu: untick NumberFormat, Apply: texts set from now on are plain again (already-displayed labels update when they next change).
 
+## BardPreview [NEW]
+Unlocks the Bard skill tree that ships hidden in the game files (unreleased Bard Pack DLC). Rule built into the mod: it only works while the game still flags the pack as hidden; once the pack is sold, the mod does nothing.
+- [ ] Startup log: `Loading [BardPreview 1.0.0]`, `Patched 2 methods`, every plugin says `Master config: 18/18 mods enabled`, and one line `BardPack is hidden (unreleased) - granted free access for this session`.
+- [ ] Open the skill tree: a 14th tab after Chaos (Bard) with 31 skills over 5 tiers, no "buy DLC" overlay on the tab; hovering skills shows the normal tooltips (ScalingTooltips lines included).
+- [ ] Respec in town (free since 1.3.1) or use a Test character, learn Verse of Valor and Harmonize I, fight: the skills are on the bar and castable; the BattleStats log names them and the Stats window hover lists them.
+- [ ] F9 window: untick "Bard tree preview", Apply, reopen the skill tree: the tab is gone and the Bard skills are off the bar (points stay spent, see caveat). Tick, Apply, reopen: tab and skills are back. Log: `Skill caches refreshed for N character(s)`.
+- [ ] Co-op with a friend who installed the pack: both see the Bard tab and each other's Bard skills. A friend WITHOUT the pack sees your character without its Bard skills (expected; tell them to install).
+- [ ] No `[Warning:BardPreview]` lines. Caveat to remember: respec while the mod is on before ever turning it off, or the Bard points stay sunk in invisible skills.
+
 ## Installer update check [REG]
 - [x] Run the installer with internet: its window says "Pack in this installer: vX - up to date (GitHub: vX)" or "... vY is on GitHub and will be downloaded on Install"; Install log starts with "Latest online: vY | in this installer: vX | installed: vZ" and, when newer, "Downloaded vY and verified its checksum" and "Installing mod pack vY (downloaded)".
 - [x] After install, `BepInEx\stolenrealm-mods.version` holds the installed version.
@@ -225,9 +234,9 @@ Test1..Test6 were generated with an EMPTY quest list, so they are the perfect te
 - [x] Config policy (changed 2026-09-16): with the "Keep the mod settings I edited by hand" box UNCHECKED (default) every `stolenrealm.*.cfg` and the switchboard are replaced with the pack's copies (log: "reset N config file(s)"); CHECKED they are merged and your values survive.
 
 ## ModMenu (F9 window) [REG]
-- [x] Startup log: `Loading [ModMenu 1.0.0]`, `Patched 0 methods`, every plugin says `Master config: 17/17 mods enabled`.
-- [x] In town press **F9**: a centred window "Stolen Realm Mods" with one checkbox row per mod except the menu itself (16) and "Verbose logging (all mods)", Apply and Cancel. Game input behind it is blocked. Escape or F9 closes it without changes; Cancel too.
-- [x] Untick TargetTooltip, Apply: window closes, every plugin logs `Config reloaded (16/17 mods enabled ...)`, TargetTooltip logs `patches removed`; in battle no mod tooltip on hover. F9, tick, Apply: `Patched 3 methods`, tooltip back. Same with ThreatOverlay (Alt) and AutoSalvage.
+- [x] Startup log: `Loading [ModMenu 1.0.0]`, `Patched 0 methods`, every plugin says `Master config: 18/18 mods enabled`.
+- [x] In town press **F9**: a centred window "Stolen Realm Mods" with one checkbox row per mod except the menu itself (17) and "Verbose logging (all mods)", Apply and Cancel. Game input behind it is blocked. Escape or F9 closes it without changes; Cancel too.
+- [x] Untick TargetTooltip, Apply: window closes, every plugin logs `Config reloaded (17/18 mods enabled ...)`, TargetTooltip logs `patches removed`; in battle no mod tooltip on hover. F9, tick, Apply: `Patched 3 methods`, tooltip back. Same with ThreatOverlay (Alt) and AutoSalvage.
 - [x] Untick Verbose logging, Apply: each plugin logs `VerboseLogging = False`; tick, Apply: back to True.
 - [x] Edit a per-mod cfg in Notepad, F9, Apply with no box changed: the edit is picked up (`Config reloaded` lines, "(no mod changed; configs re-read)" in the ModMenu line).
 - [x] `stolenrealm.mods.cfg` after Apply still has the header comments, one line per mod and the VerboseLogging line.
@@ -243,7 +252,7 @@ Test1..Test6 were generated with an EMPTY quest list, so they are the perfect te
 - [x] Set `VerboseLogging = false`, F9: every plugin logs a "[General] VerboseLogging = False" line and the per-mod cfg files now say false too. Set true again.
 - [x] Delete the file, F9 or restart: it is recreated with defaults.
 - [x] Set `FortuneUpgrade = false`, F9, hover a fortune and press U: nothing happens (no confirm window). Back to true, F9: the U prompt is back.
-- Log at startup: each plugin prints "Master config: 17/17 mods enabled, verbose on for all".
+- Log at startup: each plugin prints "Master config: 18/18 mods enabled, verbose on for all".
 
 ## General
 - [x] **F9** in game: every plugin logs "Config reloaded".

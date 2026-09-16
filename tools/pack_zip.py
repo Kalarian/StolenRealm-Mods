@@ -17,7 +17,7 @@ SHARE = os.path.join(ROOT, "mods", "share")
 ZIP = os.path.join(ROOT, "mods", "StolenRealm-Mods-install.zip")
 EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 PLUGINS = ["DropRates", "DifficultyXP", "QoL", "TargetTooltip", "SpecialTooltips", "ScalingTooltips", "SharedFortunes",
-           "FortunePreview", "FortuneUpgrade", "LevelSync", "AutoSalvage", "SharedGold", "BattleStats", "ThreatOverlay", "ModMenu", "SharedProgress", "NumberFormat"]
+           "FortunePreview", "FortuneUpgrade", "LevelSync", "AutoSalvage", "SharedGold", "BattleStats", "ThreatOverlay", "ModMenu", "SharedProgress", "NumberFormat", "BardPreview"]
 PDF_NAME = "Stolen Realm Mods - Read Me.pdf"
 README_NAME = "README - Stolen Realm mods.txt"
 # (config file basename, section, key) -> value forced in the share copy
