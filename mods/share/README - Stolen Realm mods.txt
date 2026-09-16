@@ -3,7 +3,9 @@ Stolen Realm mods: QoL + DropRates + DifficultyXP + TargetTooltip + SpecialToolt
                    (BepInEx 5.4.23.5, x64)
 
 See "Stolen Realm Mods - Read Me.pdf" in this zip for the friendly version: one summary page, then a page per mod.
-Easiest install: run "Install Stolen Realm Mods.exe" (finds the game folder, merges your existing settings).
+Easiest install: run "Install Stolen Realm Mods.exe" (finds the game folder, merges your existing settings). The
+installer checks GitHub each time you run it and installs the newest pack, so keep the exe and just run it again to update.
+Latest version: https://github.com/Kalarian/StolenRealm-Mods/releases/latest
 
 INSTALL BY HAND
   1. Steam > right-click Stolen Realm > Manage > Browse local files.

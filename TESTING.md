@@ -218,6 +218,11 @@ Test1..Test6 were generated with an EMPTY quest list, so they are the perfect te
 - [ ] Verbose log: the first 40 `Formatted: '...' -> '...'` lines look sane (no codes or tags touched).
 - [ ] Mod menu: untick NumberFormat, Apply: texts set from now on are plain again (already-displayed labels update when they next change).
 
+## Installer update check [NEW]
+- [ ] Run the installer with internet: its window says "Pack in this installer: vX - up to date (GitHub: vX)" or "... vY is on GitHub and will be downloaded on Install"; Install log starts with "Latest online: vY | in this installer: vX | installed: vZ" and, when newer, "Downloaded vY and verified its checksum" and "Installing mod pack vY (downloaded)".
+- [ ] After install, `BepInEx\stolenrealm-mods.version` holds the installed version.
+- [ ] Run it without internet: "GitHub not reachable, this pack will be used" and the built-in pack installs.
+
 ## ModMenu (F9 window) [NEW]
 - [ ] Startup log: `Loading [ModMenu 1.0.0]`, `Patched 0 methods`, every plugin says `Master config: 15/15 mods enabled`.
 - [ ] In town press **F9**: a centred window "Stolen Realm Mods" with one checkbox row per mod (15) and "Verbose logging (all mods)", Apply and Cancel. Game input behind it is blocked. Escape or F9 closes it without changes; Cancel too.
