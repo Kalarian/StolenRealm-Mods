@@ -15,14 +15,15 @@ namespace Installer
 {
     /// <summary>
     /// One-file installer for the Stolen Realm mod pack (the pack zip is an embedded resource).
-    /// Double-click: a small window shows the detected game folder, a checkbox for resetting settings, and
-    /// Install / Remove buttons. Command line (for testing and scripts): "<gameFolder> install [overwrite]" or
+    /// Double-click: a small window shows the detected game folder, a checkbox for keeping hand-edited settings, and
+    /// Install / Remove buttons. Command line (for testing and scripts): "<gameFolder> install [keep] [offline]" or
     /// "<gameFolder> uninstall" runs without a window and writes "install-log.txt" into the game folder.
     /// Config policy: DLLs and loader files are always replaced; our plugin folders that are no longer in the pack
-    /// (stolenrealm.*.dll, not TestDriver) are removed with their cfg and switchboard line. Config files are MERGED unless "overwrite" is chosen:
-    /// every value the player already has is kept, every setting the pack has that the player's file lacks is added
-    /// with the pack's value (with its comment), and settings the pack no longer has are left in place (BepInEx
-    /// ignores them). The master switchboard is merged the same way, so on/off choices survive.
+    /// (stolenrealm.*.dll, not TestDriver) are removed with their cfg and switchboard line. Config files are REPLACED
+    /// with the pack's copies by default (the friends never edit them, so every install lands on the pack's settings);
+    /// with "keep" (the checkbox) they are merged instead: every value the player already has is kept, every setting
+    /// the pack has that the player's file lacks is added with the pack's value (with its comment), and settings the
+    /// pack no longer has are left in place (BepInEx ignores them). The master switchboard follows the same rule.
     /// </summary>
     internal static class Program
     {
@@ -35,7 +36,7 @@ namespace Installer
             {
                 // headless mode
                 string dir = args[0];
-                bool overwrite = args.Any(a => a.Equals("overwrite", StringComparison.OrdinalIgnoreCase));
+                bool overwrite = !args.Any(a => a.Equals("keep", StringComparison.OrdinalIgnoreCase));
                 bool offline = args.Any(a => a.Equals("offline", StringComparison.OrdinalIgnoreCase));
                 var log = new StringBuilder();
                 int code;
@@ -434,7 +435,7 @@ namespace Installer
     internal sealed class MainForm : Form
     {
         private readonly TextBox _path = new TextBox();
-        private readonly CheckBox _overwrite = new CheckBox();
+        private readonly CheckBox _keep = new CheckBox();
         private readonly TextBox _log = new TextBox();
         private readonly Button _install = new Button();
         private readonly Button _remove = new Button();
@@ -469,9 +470,9 @@ namespace Installer
             var browse = new Button { Text = "Browse...", Location = new Point(464, 96), Size = new Size(78, 28) };
             browse.Click += (s, e) => Browse();
 
-            _overwrite.Text = "Reset all mod settings to the pack's settings (overwrites my config edits)";
-            _overwrite.AutoSize = true; _overwrite.Location = new Point(18, 136);
-            var note = new Label { Text = "Unchecked (recommended): your settings are kept and any new settings are added with the pack's values.", AutoSize = true, Location = new Point(36, 158), ForeColor = Color.DimGray, Font = new Font("Segoe UI", 8.5f) };
+            _keep.Text = "Keep the mod settings I edited by hand (merge instead of replace)";
+            _keep.AutoSize = true; _keep.Location = new Point(18, 136);
+            var note = new Label { Text = "Unchecked (recommended): every mod config file is replaced with the pack's copy, so you get exactly the shared settings.", AutoSize = true, Location = new Point(36, 158), ForeColor = Color.DimGray, Font = new Font("Segoe UI", 8.5f) };
 
             _install.Text = "Install / Update"; _install.SetBounds(18, 190, 150, 34); _install.Font = new Font("Segoe UI", 10f, FontStyle.Bold);
             _install.Click += (s, e) => Run(false);
@@ -483,7 +484,7 @@ namespace Installer
             _log.Multiline = true; _log.ReadOnly = true; _log.ScrollBars = ScrollBars.Vertical;
             _log.SetBounds(18, 236, 524, 148); _log.Font = new Font("Consolas", 9f); _log.BackColor = Color.White;
 
-            Controls.AddRange(new Control[] { title, sub, pathLabel, _path, browse, _overwrite, note, _install, _remove, close, _log });
+            Controls.AddRange(new Control[] { title, sub, pathLabel, _path, browse, _keep, note, _install, _remove, close, _log });
 
             string found = null;
             try { found = Pack.FindGameFolder(); } catch { }
@@ -514,14 +515,13 @@ namespace Installer
                 return;
             }
             if (uninstall && MessageBox.Show(this, "Remove the mod loader and every mod from\n" + dir + "?\n\nSaves and screenshots are not touched.", "Remove mods", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
-            if (!uninstall && _overwrite.Checked && MessageBox.Show(this, "This replaces every mod config file with the pack's copy. Any settings you changed by hand are lost.\n\nContinue?", "Reset settings", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
 
             _install.Enabled = _remove.Enabled = false;
             var log = new StringBuilder();
             try
             {
                 string zip = uninstall ? null : Updater.FetchNewerZip(dir, log);
-                int code = uninstall ? Pack.Uninstall(dir, log) : Pack.Install(dir, _overwrite.Checked, log, zip);
+                int code = uninstall ? Pack.Uninstall(dir, log) : Pack.Install(dir, !_keep.Checked, log, zip);
                 Log(log.ToString().TrimEnd());
                 if (code == 0 && !uninstall) Log("You can close this window and start the game.");
             }

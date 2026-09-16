@@ -2,7 +2,7 @@
 
 Seventeen small quality-of-life BepInEx mods for Stolen Realm, made for a group of friends. **Players: download
 `Install Stolen Realm Mods.exe` from the [latest release](https://github.com/Kalarian/StolenRealm-Mods/releases/latest),
-run it, done.** The installer finds the game, keeps your settings, and from then on checks GitHub every time you run it,
+run it, done.** The installer finds the game, puts the shared settings in place, and from then on checks GitHub every time you run it,
 so the same exe always installs the newest pack. Press F9 in game for the mod window. The one-page summary and a page per
 mod are in `Stolen Realm Mods - Read Me.pdf` (also attached to every release).
 
@@ -77,7 +77,7 @@ BattleStats mod (in the zip): `mods/BattleStats/` - recorder (every damage/heal/
 
 ThreatOverlay mod: `mods/ThreatOverlay/` — hold Left Alt in battle to tint hexes enemies can reach (red) and hit (orange) next turn; Dijkstra over HexCellManager.HexCost with TurnFreeMovementPoints, strike = longest harmful simple range; paints via the cell overlay + HexCell.UpdateHexCell postfix. In the zip.
 
-Installer: `mods/Installer/` (net48 WinForms exe, no runtime needed on Win10/11) embeds `mods/StolenRealm-Mods-install.zip`; window with detected game folder (Steam registry + libraryfolders.vdf, Browse fallback), a 'reset settings' checkbox, Install/Update and Remove buttons. Policy: DLLs/loader always replaced; retired mods removed (any `BepInEx/plugins/<X>` holding a `stolenrealm.*.dll` that is not in the pack, except TestDriver, plus its cfg and switchboard line; verified headlessly against a fake folder 2026-09-15); every `.cfg` MERGED (friend's values kept, missing settings added with the pack's values and comments, in the right section; master file too) unless the checkbox is ticked, which replaces the cfg files. Headless test mode: `"Install Stolen Realm Mods.exe" <gameFolder> install [overwrite] | uninstall` writes install-log.txt. Rebuild after every zip change: `bash tools/build_installer.sh` -> `mods/share/Install Stolen Realm Mods.exe`.
+Installer: `mods/Installer/` (net48 WinForms exe, no runtime needed on Win10/11) embeds `mods/StolenRealm-Mods-install.zip`; window with detected game folder (Steam registry + libraryfolders.vdf, Browse fallback), a 'keep my edited settings' checkbox (unchecked: every mod cfg is replaced with the pack's copy, the friends never edit them; checked: merge, keeping their values and adding new keys), Install/Update and Remove buttons. Policy: DLLs/loader always replaced; retired mods removed (any `BepInEx/plugins/<X>` holding a `stolenrealm.*.dll` that is not in the pack, except TestDriver, plus its cfg and switchboard line; verified headlessly against a fake folder 2026-09-15); every `.cfg` MERGED (friend's values kept, missing settings added with the pack's values and comments, in the right section; master file too) unless the checkbox is ticked, which replaces the cfg files. Headless test mode: `"Install Stolen Realm Mods.exe" <gameFolder> install [overwrite] | uninstall` writes install-log.txt. Rebuild after every zip change: `bash tools/build_installer.sh` -> `mods/share/Install Stolen Realm Mods.exe`.
 
 TestDriver (dev only, not shipped): `mods/TestDriver/` + `tools/run_test_battle.sh` — launches the game with `-srtest` and plays a full battle automatically (see its README). Run it after any battle/UI mod change.
 

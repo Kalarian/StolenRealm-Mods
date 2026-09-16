@@ -222,6 +222,7 @@ Test1..Test6 were generated with an EMPTY quest list, so they are the perfect te
 - [ ] Run the installer with internet: its window says "Pack in this installer: vX - up to date (GitHub: vX)" or "... vY is on GitHub and will be downloaded on Install"; Install log starts with "Latest online: vY | in this installer: vX | installed: vZ" and, when newer, "Downloaded vY and verified its checksum" and "Installing mod pack vY (downloaded)".
 - [ ] After install, `BepInEx\stolenrealm-mods.version` holds the installed version.
 - [ ] Run it without internet: "GitHub not reachable, this pack will be used" and the built-in pack installs.
+- [ ] Config policy (changed 2026-09-16): with the "Keep the mod settings I edited by hand" box UNCHECKED (default) every `stolenrealm.*.cfg` and the switchboard are replaced with the pack's copies (log: "reset N config file(s)"); CHECKED they are merged and your values survive.
 
 ## ModMenu (F9 window) [NEW]
 - [ ] Startup log: `Loading [ModMenu 1.0.0]`, `Patched 0 methods`, every plugin says `Master config: 15/15 mods enabled`.
