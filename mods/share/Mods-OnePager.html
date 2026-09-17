@@ -66,6 +66,7 @@
   <tr><td class="name">Fortune upgrades</td><td class="what">In town, open the Fortune window, hover a fortune and press <kbd>U</kbd> to raise it to your level for gold. Priced like upgrading a two-handed weapon of the same rarity, and you only pay for the levels gained.</td></tr>
   <tr><td class="name">Readable numbers</td><td class="what">Every number the game shows gets thousands separators: 418218 gold reads 418,218, a 1250 hit reads 1,250. Codes, dates, colours and anything you type are left alone.</td></tr>
   <tr><td class="name">Bard tree preview</td><td class="what">The game files already contain the complete Bard skill tree (31 skills), hidden as an unreleased DLC. This mod shows the tab and lets you learn and use the skills, exactly the way the game's own test harness unlocks it. It only works while the pack is unreleased: the day the Bard Pack is sold, the mod does nothing and the normal purchase check applies. Everyone in a co-op session needs the pack installed, or they will not see your Bard skills.</td></tr>
+  <tr><td class="name">Item skill tooltips</td><td class="what">Hover an item that grants a skill or a passive and the skill's own tooltip appears next to the item tooltip, with its numbers at the item's level. Covers the "Skills Granted" list and items whose text names a skill ("Grants the passive skill ...", "chance to cast ...").</td></tr>
   <tr><td class="name">Mod window</td><td class="what">Press <kbd>F9</kbd> in game for a window with a checkbox per mod. Tick, untick, Apply: the mods switch on or off right away, no restart, no config files to edit.</td></tr>
   <tr><td class="name">Battle stats that add up</td><td class="what">The post-battle Stats window gains a damage breakdown (direct, poison/burn ticks, ground tiles, summons, thorns), crit rate, kills, biggest hit, best skill, damage by element, casts and mana. Hover a name for that character's top skills.</td></tr>
   <tr><td class="name">Threat overlay</td><td class="what">In battle, hold <kbd>Left Alt</kbd>: hexes enemies can walk to next turn go red, hexes they could hit from there go orange. Release to clear.</td></tr>
@@ -368,6 +369,25 @@
   <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Unlock the hidden trees listed below.</td></tr>
   <tr><td class="key">Trees</td><td class="def">Bard</td><td class="desc">Which hidden trees to preview (only trees the game locks behind an unreleased DLC count).</td></tr>
   <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file; log each DLC check the mod answers.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 19. ItemSkillTooltips ===================== -->
+<div class="page">
+<h1>Item skill tooltips</h1>
+<p class="tag">ItemSkillTooltips &middot; settings in <span class="file">BepInEx\config\stolenrealm.itemskilltooltips.cfg</span></p>
+<p>An item that grants a skill only tells you the skill's name. Now the skill's full tooltip opens beside the item tooltip (and beside the comparison tooltip when one is up), the same panel you would see in the skill tree, with the numbers sized to the item's level so you know what equipping it gives you. It works in the bag, on the character sheet, in shops, loot windows and crafting.</p>
+<ul>
+  <li>Covers the "Skills Granted" list and items whose special text names a skill, such as "Grants the passive skill Child of the Abyss" or "10% chance to cast Blinding Light".</li>
+  <li>Up to two skill panels per item by default (<span class="file">MaxPanels</span>).</li>
+</ul>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Show the skill tooltips.</td></tr>
+  <tr><td class="key">ShowGrantedSkills / ShowNamedSkills</td><td class="def">true / true</td><td class="desc">The "Skills Granted" list; skills named in the item's special text.</td></tr>
+  <tr><td class="key">MaxPanels</td><td class="def">2</td><td class="desc">How many skill panels to show side by side (1-4).</td></tr>
+  <tr><td class="key">ItemLevelNumbers</td><td class="def">true</td><td class="desc">Numbers at the item's level (off: at your character's level).</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file; log each hover that produced skill tooltips.</td></tr>
 </table>
 </div>
 

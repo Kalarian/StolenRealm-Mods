@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using BepInEx;
 
-namespace FortuneUpgrade
+namespace ItemSkillTooltips
 {
     /// <summary>
     /// One switchboard for every Stolen Realm mod: BepInEx\config\stolenrealm.mods.cfg.
