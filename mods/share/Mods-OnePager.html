@@ -65,8 +65,9 @@
   <tr><td class="name">Junk auto-sold</td><td class="what">White, green and blue equipment and trade commodities are sold the moment they drop (you see "+340 gold, sold 4" over your character); crafting materials, and commodities any recipe needs, go straight to storage. Legendaries, mythics, consumables and anything you bought or crafted are never touched. Each rarity has its own switch in the config.</td></tr>
   <tr><td class="name">Fortune upgrades</td><td class="what">In town, open the Fortune window, hover a fortune and press <kbd>U</kbd> to raise it to your level for gold. Priced like upgrading a two-handed weapon of the same rarity, and you only pay for the levels gained.</td></tr>
   <tr><td class="name">Readable numbers</td><td class="what">Every number the game shows gets thousands separators: 418218 gold reads 418,218, a 1250 hit reads 1,250. Codes, dates, colours and anything you type are left alone.</td></tr>
-  <tr><td class="name">Bard tree preview</td><td class="what">The game files already contain the complete Bard skill tree (31 skills), hidden as an unreleased DLC. This mod shows the tab and lets you learn and use the skills, exactly the way the game's own test harness unlocks it. It only works while the pack is unreleased: the day the Bard Pack is sold, the mod does nothing and the normal purchase check applies. Everyone in a co-op session needs the pack installed, or they will not see your Bard skills.</td></tr>
   <tr><td class="name">Item skill tooltips</td><td class="what">Hover an item that grants a skill or a passive and the skill's own tooltip appears next to the item tooltip, with its numbers at the item's level. Covers the "Skills Granted" list and items whose text names a skill ("Grants the passive skill ...", "chance to cast ...").</td></tr>
+  <tr><td class="name">Sell value on tooltips</td><td class="what">Every item tooltip ends with what a shop pays for the item, bottom right: "Sell: 1200" with the gold icon, and for a stack the total plus the value of one unit. Also on the comparison tooltip of the equipped item, so you can see what you would get for either one without walking to a vendor.</td></tr>
+  <tr><td class="name">Roguelike QoL</td><td class="what">Roguelike runs only. The game secretly flips a coin on every event island: heads you get an event that can lead to a Fortune, tails you get one that cannot. Now 4 islands in 5 lead to a Fortune instead of 1 in 2, and the trap-style events (Acid Trap, Bear Trap, Rockslide!, Tornado!, Saw Trap and 14 more) that only give XP when you pass a dice roll but curse you for the whole run when you fail are gone, and the meta currency you earn for permanent power-ups is multiplied by 1.5, gold earned from battles and events by 1.25, and the six items offered after every battle roll better rarities (Rare 25%, Legendary 10%, Mythic 5% per item instead of 16 / 3 / 1). Whoever hosts decides the events; the currency, gold and rarity bonuses need the mod on your own PC.</td></tr>
   <tr><td class="name">Mod window</td><td class="what">Press <kbd>F9</kbd> in game for a window with a checkbox per mod. Tick, untick, Apply: the mods switch on or off right away, no restart, no config files to edit.</td></tr>
   <tr><td class="name">Battle stats that add up</td><td class="what">The post-battle Stats window gains a damage breakdown (direct, poison/burn ticks, ground tiles, summons, thorns), crit rate, kills, biggest hit, best skill, damage by element, casts and mana. Hover a name for that character's top skills.</td></tr>
   <tr><td class="name">Threat overlay</td><td class="what">In battle, hold <kbd>Left Alt</kbd>: hexes enemies can walk to next turn go red, hexes they could hit from there go orange. Release to clear.</td></tr>
@@ -354,24 +355,6 @@
 </table>
 </div>
 
-<!-- ===================== 18. BardPreview ===================== -->
-<div class="page">
-<h1>Bard tree preview</h1>
-<p class="tag">BardPreview &middot; settings in <span class="file">BepInEx\config\stolenrealm.bardpreview.cfg</span></p>
-<p>The September 2026 update shipped a complete fourteenth skill tree, <b>Bard</b> (31 skills: songs, harmony stacks for allies, taunts, counter-melodies), but keeps it hidden because it belongs to a DLC that has not been released yet. The game contains its own switch for previewing such a tree, used by the developers' tests; this mod flips that switch. Open the skill tree and the Bard tab sits after Chaos, with the usual tooltips and the free town respec to try it.</p>
-<ul>
-  <li><b>Unreleased only.</b> The unlock works only while the game itself marks the pack as hidden. Once the Bard Pack is on sale, the mod does nothing for it and the game's normal purchase check applies. There is no setting to change that.</li>
-  <li><b>Co-op:</b> every player's game decides on its own which skills a character has. A friend without this pack sees your character without its Bard skills, so make sure everyone runs the installer.</li>
-  <li><b>Turning it off later:</b> Bard skills you learned stay in the save but become invisible and their points stay spent. Respec in town while the mod is still on before switching it off.</li>
-</ul>
-<h2>Settings</h2>
-<table class="cfg">
-  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Unlock the hidden trees listed below.</td></tr>
-  <tr><td class="key">Trees</td><td class="def">Bard</td><td class="desc">Which hidden trees to preview (only trees the game locks behind an unreleased DLC count).</td></tr>
-  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file; log each DLC check the mod answers.</td></tr>
-</table>
-</div>
-
 <!-- ===================== 19. ItemSkillTooltips ===================== -->
 <div class="page">
 <h1>Item skill tooltips</h1>
@@ -388,6 +371,54 @@
   <tr><td class="key">MaxPanels</td><td class="def">2</td><td class="desc">How many skill panels to show side by side (1-4).</td></tr>
   <tr><td class="key">ItemLevelNumbers</td><td class="def">true</td><td class="desc">Numbers at the item's level (off: at your character's level).</td></tr>
   <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file; log each hover that produced skill tooltips.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 20. SellValue ===================== -->
+<div class="page">
+<h1>Sell value on tooltips</h1>
+<p class="tag">SellValue &middot; settings in <span class="file">BepInEx\config\stolenrealm.sellvalue.cfg</span></p>
+<p>The game only tells you what an item sells for once you are at a vendor with the Sell tab open. Now every item tooltip ends with that number, bottom right: <b>Sell: 1200</b> with the gold icon. It is the exact amount the shop pays (8% of the purchase price, rounded to 5; commodities have their own fixed price). Bag, character sheet, stash, shops, loot windows, gambling, reforging and item links in chat all show it, and the comparison tooltip of your equipped item shows its own value beside it.</p>
+<ul>
+  <li><b>Stacks:</b> the line shows the whole stack and one unit, e.g. <b>Sell: 600 (120 each)</b>.</li>
+  <li>The game's own footer notes ("Not Enough Gold", "Requirements Not Met", item owner) stay where they were; the sell line sits under them on the right.</li>
+  <li>The crafting window's recipe preview has no real item yet, so it shows no value.</li>
+</ul>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">Enabled</td><td class="def">true</td><td class="desc">Show the line.</td></tr>
+  <tr><td class="key">OnComparison</td><td class="def">true</td><td class="desc">Also on the equipped-item comparison tooltip.</td></tr>
+  <tr><td class="key">PerUnit</td><td class="def">true</td><td class="desc">For a stack, add the value of one unit after the total.</td></tr>
+  <tr><td class="key">Label</td><td class="def">Sell</td><td class="desc">The word before the number; leave empty for number and icon only.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file; log each hover with the value shown.</td></tr>
+</table>
+</div>
+
+<!-- ===================== 21. RoguelikeQoL (Roguelike quality of life) ===================== -->
+<div class="page">
+<h1>Roguelike QoL: better events, rewards and gear</h1>
+<p class="tag">RoguelikeQoL &middot; settings in <span class="file">BepInEx\config\stolenrealm.roguelikeqol.cfg</span></p>
+<p>In a Roguelike run your Fortunes come only from island events, and the game decides with a hidden coin flip whether an event island can lead to a Fortune at all: heads (1 in 2) you get one of the 48 events that can (shrines, monoliths, mimic chests, Hell Gate...), tails you get one of the others. Some of those others are traps: a forced dice roll with no way to walk away, a little XP if you pass, and if you fail a curse (less damage, less health, slower...) that stays for the whole run because a run never visits town, the only place that clears such curses.</p>
+<ul>
+  <li><b>4 in 5 event islands lead to a Fortune</b> (<span class="file">FortuneNodeChance</span> = 80; 50 is the vanilla coin, 100 makes every event island a Fortune chance). The Fortune still has to be earned the normal way: some are a free pick, some need a fight, a few need a good dice roll.</li>
+  <li><b>19 trap events removed:</b> Acid Trap, Bear Trap, Below Zero, Cursed Clock, Dwarven Sentry Wall, Enchanted Axe, Eruption!, Fickle Fungus, Furnace Trap, Grinder Trap, Lightning Sentry, Mechanical Crusher, Rockslide!, Sandstorm!, Saw Trap, Snowstorm!, Spear Trap, Tornado!, Witch's Cauldron. Edit the list in the settings file to add or keep any of them (write the event's name as shown in game, comma-separated).</li>
+  <li>Events with a Leave option or a real reward (Heavy Safe, The Old Well, Stone Covered Grave, Shawn the Benevolent, Ogre Debt Collector...) stay in.</li>
+  <li><b>1.5x meta currency:</b> every grant of the Roguelike currency (the one you spend on permanent power-ups between runs), after each battle and the bonus for finishing a run, is multiplied by 1.5. The number on the level-up screen already shows the boosted amount.</li>
+  <li><b>1.25x gold:</b> gold from battles, events and gold piles in a run is multiplied by 1.25 (selling items is unchanged).</li>
+  <li><b>Better gear offers:</b> after every battle each character is shown six items (one per slot) and keeps one. Normally each is Uncommon 80%, Rare 16%, Legendary 3%, Mythic 1%; with the boost at 2 it is Uncommon 60%, Rare 25%, Legendary 10%, Mythic 5%, so most battles show at least one Legendary or better. Legendary still needs level 3, Mythic level 5.</li>
+  <li>Campaign islands are untouched unless you turn on the two campaign switches. In co-op the host's game builds the islands, so the host needs the mod; the currency bonus is applied by each player's own game.</li>
+</ul>
+<h2>Settings</h2>
+<table class="cfg">
+  <tr><td class="key">FortuneNodeChance</td><td class="def">80</td><td class="desc">Percent of event islands that can lead to a Fortune (vanilla 50).</td></tr>
+  <tr><td class="key">ApplyInCampaign</td><td class="def">false</td><td class="desc">Use that chance on campaign islands too.</td></tr>
+  <tr><td class="key">RemoveEvents</td><td class="def">19 traps</td><td class="desc">Events that never appear, comma-separated names. Empty = none removed.</td></tr>
+  <tr><td class="key">RemoveInCampaign</td><td class="def">false</td><td class="desc">Remove them on campaign islands too.</td></tr>
+  <tr><td class="key">CurrencyMultiplier</td><td class="def">1.5</td><td class="desc">Multiplier on all Roguelike currency earned (1 = normal).</td></tr>
+  <tr><td class="key">GoldMultiplier</td><td class="def">1.25</td><td class="desc">Multiplier on gold earned in a run (1 = normal).</td></tr>
+  <tr><td class="key">RarityBoost</td><td class="def">2</td><td class="desc">How much more likely each higher rarity is in the post-battle gear offers (1 = normal, 3 = very generous).</td></tr>
+  <tr><td class="key">BoostBossRewards</td><td class="def">true</td><td class="desc">Apply it to boss rewards too.</td></tr>
+  <tr><td class="key">ReloadKey / VerboseLogging</td><td class="def">F9 / true</td><td class="desc">Re-read this file; log every event pick and every blocked event.</td></tr>
 </table>
 </div>
 

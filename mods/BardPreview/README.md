@@ -1,3 +1,5 @@
+**RETIRED 2026-09-17** (user: "we won't be using it until it's completed"): not in gen_master/pack_zip/ModMenu, not shipped; re-add to those lists to revive.
+
 # BardPreview
 
 Unlocks the Bard skill tree, which ships complete in the game files (31 skills, `SkillType.Bard`) but is hidden behind

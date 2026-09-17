@@ -15,7 +15,7 @@ namespace SpecialTooltips
     internal static class MasterConfig
     {
         public const string FileName = "stolenrealm.mods.cfg";
-        public static readonly string[] AllPlugins = { "DropRates", "DifficultyXP", "QoL", "TargetTooltip", "SpecialTooltips", "ScalingTooltips", "SharedFortunes", "FortunePreview", "FortuneUpgrade", "LevelSync", "AutoSalvage", "SharedGold", "BattleStats", "ThreatOverlay", "ModMenu", "SharedProgress", "NumberFormat", "BardPreview", "ItemSkillTooltips" };
+        public static readonly string[] AllPlugins = { "DropRates", "DifficultyXP", "QoL", "TargetTooltip", "SpecialTooltips", "ScalingTooltips", "SharedFortunes", "FortunePreview", "FortuneUpgrade", "LevelSync", "AutoSalvage", "SharedGold", "BattleStats", "ThreatOverlay", "ModMenu", "SharedProgress", "NumberFormat", "ItemSkillTooltips", "SellValue", "RoguelikeQoL" };
         private static readonly Dictionary<string, bool> _on = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
         private static bool? _verbose;
 

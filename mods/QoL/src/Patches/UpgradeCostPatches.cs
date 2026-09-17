@@ -51,5 +51,32 @@ namespace QoL.Patches
                 }
             }
         }
+
+        /// <summary>
+        /// The upgrade tab's hover (ItemSlot.OnPointerEnter) decides between the Upgrade button and "Not Enough Gold" with
+        /// Item.UpgradePrice = full purchase price at the item's CURRENT level x 1.5, not with GetUpgradeCost. In vanilla
+        /// that gate is always at or below the real charge, so nobody notices; with the gap-based price it can sit far
+        /// above what we actually charge and refuse an affordable upgrade (found 2026-09-16: 33,750 gold, robes shown at
+        /// 26,880, gate at 67,200). While the upgrade window exists, UpgradePrice now answers with the same number the
+        /// window shows and charges.
+        /// </summary>
+        [HarmonyPatch(typeof(Item), nameof(Item.UpgradePrice), MethodType.Getter)]
+        private static class Item_UpgradePrice
+        {
+            private static void Postfix(Item __instance, ref float __result)
+            {
+                QoLConfig cfg = QoLPlugin.Cfg;
+                if (cfg == null || !cfg.UpgradeCostByLevelGap.Value || __instance == null) return;
+                try
+                {
+                    ItemUpgradeManager mgr = LoadableUIWindow<ItemUpgradeManager>.Instance;
+                    if (mgr == null || __instance.Owner == null) return;
+                    int target = __instance.Owner.Level;
+                    if (target <= __instance.itemLevel) return;
+                    __result = mgr.GetUpgradeCost(__instance, target); // goes through the postfix above: the gap-based price
+                }
+                catch { }
+            }
+        }
     }
 }

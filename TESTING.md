@@ -6,7 +6,7 @@ Legend: every item below was verified in game by 2026-09-16 (all boxes ticked). 
 
 **Game update 2026-09-15 (Steam build 25240684, Unity 2022.3.62):** with the old BepInEx.cfg every mod silently switched itself off 0.4 s after launch (log: `patches removed - mod is OFF` right after `Chainloader startup complete`). The new pack ships BepInEx.cfg with `[Preloader.Entrypoint] Type = MonoBehaviour`; the installer always replaces that file. Check after installing: the log must NOT contain `patches removed` lines at startup, and must contain `Log owner: Steam '<name>'`.
 
-Before starting: launch the game once and confirm the log has `Loading [X 1.0.0]` for all nineteen plugins (AutoSalvage, BardPreview, BattleStats, DifficultyXP, DropRates, FortunePreview, FortuneUpgrade, ItemSkillTooltips, LevelSync, ModMenu, NumberFormat, QoL, ScalingTooltips, SharedFortunes, SharedGold, SharedProgress, SpecialTooltips, TargetTooltip, ThreatOverlay) and no `[Error` lines.
+Before starting: launch the game once and confirm the log has `Loading [X 1.0.0]` for all twenty plugins (AutoSalvage, BattleStats, DifficultyXP, DropRates, FortunePreview, FortuneUpgrade, ItemSkillTooltips, LevelSync, ModMenu, NumberFormat, QoL, RoguelikeQoL, ScalingTooltips, SellValue, SharedFortunes, SharedGold, SharedProgress, SpecialTooltips, TargetTooltip, ThreatOverlay) and no `[Error` lines.
 
 ---
 
@@ -120,6 +120,7 @@ Before starting: launch the game once and confirm the log has `Loading [X 1.0.0]
 ---
 
 ## QoL [REG]
+- [ ] [NEW] Upgrade tab with LESS gold than an item's full vanilla price x 1.5 but more than the shown gap price (easiest in Roguelike): the tooltip offers **Upgrade** and the click works and charges the shown price. Before the 2026-09-16 fix it said "Not Enough Gold".
 - [x] Noor's upgrade cost equals the price difference between the item's level and yours, x1.5 (an item 2 levels behind is cheap; 1 level behind is cheaper still).
 - Log: `Upgrade cost <item> a->b: vanilla X -> Y`
 
@@ -218,23 +219,37 @@ Test1..Test6 were generated with an EMPTY quest list, so they are the perfect te
 - [x] Verbose log: the first 40 `Formatted: '...' -> '...'` lines look sane (no codes or tags touched).
 - [x] Mod menu: untick NumberFormat, Apply: texts set from now on are plain again (already-displayed labels update when they next change).
 
-## BardPreview [NEW]
-Unlocks the Bard skill tree that ships hidden in the game files (unreleased Bard Pack DLC). Rule built into the mod: it only works while the game still flags the pack as hidden; once the pack is sold, the mod does nothing.
-- [ ] Startup log: `Loading [BardPreview 1.0.0]`, `Patched 2 methods`, every plugin says `Master config: 19/19 mods enabled`, and one line `BardPack is hidden (unreleased) - granted free access for this session`.
-- [ ] Open the skill tree: a 14th tab after Chaos (Bard) with 31 skills over 5 tiers, no "buy DLC" overlay on the tab; hovering skills shows the normal tooltips (ScalingTooltips lines included).
-- [ ] Respec in town (free since 1.3.1) or use a Test character, learn Verse of Valor and Harmonize I, fight: the skills are on the bar and castable; the BattleStats log names them and the Stats window hover lists them.
-- [ ] F9 window: untick "Bard tree preview", Apply, reopen the skill tree: the tab is gone and the Bard skills are off the bar (points stay spent, see caveat). Tick, Apply, reopen: tab and skills are back. Log: `Skill caches refreshed for N character(s)`.
-- [ ] Co-op with a friend who installed the pack: both see the Bard tab and each other's Bard skills. A friend WITHOUT the pack sees your character without its Bard skills (expected; tell them to install).
-- [ ] No `[Warning:BardPreview]` lines. Caveat to remember: respec while the mod is on before ever turning it off, or the Bard points stay sunk in invisible skills.
 
 ## ItemSkillTooltips [NEW]
-- [ ] Startup log: `Loading [ItemSkillTooltips 1.0.0]`, `Patched 6 methods`, every plugin says `Master config: 19/19 mods enabled`.
+- [ ] Startup log: `Loading [ItemSkillTooltips 1.0.0]`, `Patched 6 methods`, every plugin says `Master config: 20/20 mods enabled`.
 - [ ] Hover a weapon or item with a "Skills Granted" line (Iron Greatsword: Cleave; any weapon with a second skill): a second panel appears beside the item tooltip with the skill's full tooltip (title, "Tier N <tree> Active/Passive Skill", description with ScalingTooltips annotations). Move off: it disappears with the item tooltip.
 - [ ] Hover an item whose Special text names a skill (Weight of the Void "Grants the passive skill Child of the Abyss", Sunstone Necklace "chance to cast Blinding Light", Forgemaster's Links "Level N Fire Shield"): the named skill's tooltip appears.
 - [ ] With something equipped in the same slot, the comparison tooltip shows as before and the skill panel sits beyond it, never on top of either; near the screen edge the panel is pushed back on screen.
 - [ ] Bag vs equipped: the skill's numbers reflect the ITEM's level (a low-level item in the bag shows lower numbers than your character level would). `ItemLevelNumbers = false`, F9: numbers at your level.
 - [ ] Hovering a skill on the action bar, a status, or a fortune right after an item: only that tooltip shows, no leftover skill panel. Shops, loot windows, the character sheet and crafting all behave the same.
 - [ ] Mod menu: untick Item skill tooltips, Apply: no panels; tick, Apply: back. No `[Warning:ItemSkillTooltips]` lines.
+
+## SellValue [NEW]
+- [x] Startup log: `Loading [SellValue 1.0.0]`, `Patched 2 methods`, every plugin says `Master config: 20/20 mods enabled` (seen 2026-09-17 00:40; all-off headless run: 21 OFF lines, 0 patched).
+- [ ] Open the bag and hover any item: the last line of the tooltip, bottom right, reads **Sell: N** with the gold icon. N equals what the shop's Sell tab offers for that item (check one in town).
+- [ ] Hover a stack (potions, materials): **Sell: total (each)**, e.g. `600 (120 each)`.
+- [ ] Hover a bag item while something is equipped in the same slot: the comparison tooltip of the equipped item also ends with its own Sell line.
+- [ ] Shop buy tab: an item you cannot afford still shows "Not Enough Gold" on the left and the Sell line under it on the right. Stash, loot window after a battle, gambling and reforge tooltips have the line too.
+- [ ] Crafting: the recipe's result tooltip (no live item) has no Sell line; that is expected.
+- [ ] Set `Label =` (empty), F9: number and icon only. `PerUnit = false`: stack total only. `OnComparison = false`: comparison tooltip without the line.
+- [ ] Log per hover (verbose): `Item 'X' sells for N; equipped 'Y' sells for M`. No `[Warning:SellValue]` lines.
+- [ ] Mod menu: untick Sell value on item tooltips, Apply: line gone; tick, Apply: back.
+
+## RoguelikeQoL [NEW]
+- [x] Startup log: `Loading [RoguelikeQoL 1.0.0]`, `Patched 9 methods`, `Roguelike events: fortune node chance 80% (roguelike only); removed events: 19 (roguelike only); currency x1.5; gold x1.25; rarity boost x2`, every plugin says `Master config: 20/20 mods enabled`.
+- [ ] Start a Roguelike run and walk 5+ islands, choosing Event nodes when offered. Each island logs one `Event node Event: forced fortune=<True|False> (roll N vs 80%) -> '<event>' [fortune|no fortune]`; the flag says True about 4 times in 5 over a run, and the event's fortune tag matches the flag.
+- [ ] None of the 19 hazards (Acid Trap, Bear Trap, Rockslide!, Tornado!, Saw Trap...) ever appears on a Roguelike island. Verbose log shows `Blocked event '<name>' (junk list)` lines while islands generate.
+- [ ] Campaign islands are unchanged: `Event node` lines say `vanilla coin`, hazards can still appear, no `Blocked event` lines.
+- [ ] Edit `RemoveEvents` (e.g. remove "Acid Trap" from the list), F9 (or Apply): the summary line shows 18; the next island can roll it again. `FortuneNodeChance = 100`, F9: every later event node logs forced fortune=True.
+- [ ] Win a Roguelike battle: the level-up screen's currency number is 1.5x the vanilla amount (log: `Roguelike currency N -> M (x1.5)`), and the currency shown at the top of the screen grows by exactly M. Finish a run: the 1200 bonus becomes 1800. Gold from the same battle is 1.25x and the post-battle window prints the boosted number (host log: `Roguelike battle gold N -> M (x1.25)`); a gold pile or event gold logs `Roguelike event gold N -> M (x1.25)`; selling an item at the Merchant logs nothing and pays the listed price. In the campaign no `Roguelike gold` lines appear.
+- [ ] After each Roguelike battle the level-up chooser's six items show far more Rare/Legendary than before (vanilla per item: 80/16/3/1; now 60/25/10/5). Log per character: `Rarity boost x2: <name> L<n> offers: Weapon Rare '...', Shield Uncommon '...', ...`. Set `RarityBoost = 1`, F9: the line says x1 and the mix drops back. Campaign post-battle loot is unchanged (no `Rarity boost` lines).
+- [ ] Co-op with you hosting: your friend without the mod sees the same events you do (host decides); currency is per player, so a friend without the mod gets vanilla amounts.
+- [ ] Mod menu: untick Roguelike QoL, Apply: `patches removed`, next islands vanilla; tick, Apply: back. No `[Warning:RoguelikeQoL]` lines.
 
 ## Installer update check [REG]
 - [x] Run the installer with internet: its window says "Pack in this installer: vX - up to date (GitHub: vX)" or "... vY is on GitHub and will be downloaded on Install"; Install log starts with "Latest online: vY | in this installer: vX | installed: vZ" and, when newer, "Downloaded vY and verified its checksum" and "Installing mod pack vY (downloaded)".
@@ -243,8 +258,8 @@ Unlocks the Bard skill tree that ships hidden in the game files (unreleased Bard
 - [x] Config policy (changed 2026-09-16): with the "Keep the mod settings I edited by hand" box UNCHECKED (default) every `stolenrealm.*.cfg` and the switchboard are replaced with the pack's copies (log: "reset N config file(s)"); CHECKED they are merged and your values survive.
 
 ## ModMenu (F9 window) [REG]
-- [x] Startup log: `Loading [ModMenu 1.0.0]`, `Patched 0 methods`, every plugin says `Master config: 19/19 mods enabled`.
-- [x] In town press **F9**: a centred window "Stolen Realm Mods" with one checkbox row per mod except the menu itself (18) and "Verbose logging (all mods)", Apply and Cancel. Game input behind it is blocked. Escape or F9 closes it without changes; Cancel too.
+- [x] Startup log: `Loading [ModMenu 1.0.0]`, `Patched 0 methods`, every plugin says `Master config: 20/20 mods enabled`.
+- [x] In town press **F9**: a centred window "Stolen Realm Mods" with one checkbox row per mod except the menu itself (19) and "Verbose logging (all mods)", Apply and Cancel. Game input behind it is blocked. Escape or F9 closes it without changes; Cancel too.
 - [x] Untick TargetTooltip, Apply: window closes, every plugin logs `Config reloaded (18/19 mods enabled ...)`, TargetTooltip logs `patches removed`; in battle no mod tooltip on hover. F9, tick, Apply: `Patched 3 methods`, tooltip back. Same with ThreatOverlay (Alt) and AutoSalvage.
 - [x] Untick Verbose logging, Apply: each plugin logs `VerboseLogging = False`; tick, Apply: back to True.
 - [x] Edit a per-mod cfg in Notepad, F9, Apply with no box changed: the edit is picked up (`Config reloaded` lines, "(no mod changed; configs re-read)" in the ModMenu line).
@@ -261,7 +276,7 @@ Unlocks the Bard skill tree that ships hidden in the game files (unreleased Bard
 - [x] Set `VerboseLogging = false`, F9: every plugin logs a "[General] VerboseLogging = False" line and the per-mod cfg files now say false too. Set true again.
 - [x] Delete the file, F9 or restart: it is recreated with defaults.
 - [x] Set `FortuneUpgrade = false`, F9, hover a fortune and press U: nothing happens (no confirm window). Back to true, F9: the U prompt is back.
-- Log at startup: each plugin prints "Master config: 19/19 mods enabled, verbose on for all".
+- Log at startup: each plugin prints "Master config: 20/20 mods enabled, verbose on for all".
 
 ## General
 - [x] **F9** in game: every plugin logs "Config reloaded".

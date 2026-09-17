@@ -15,7 +15,7 @@ Install: `stolenrealm.qol.dll` goes in `BepInEx\plugins\QoL\`. Client-side; othe
 
 ## How it works
 
-Harmony postfix on `ItemUpgradeManager.GetUpgradeCost` (with a prefix on `UpgradeItem` to capture the pre-upgrade level, since the game raises the item level before charging). The same value feeds the displayed price, the affordability check and the charge.
+Harmony postfix on `ItemUpgradeManager.GetUpgradeCost` (with a prefix on `UpgradeItem` to capture the pre-upgrade level, since the game raises the item level before charging). The same value feeds the displayed price and the charge. The upgrade tab's hover gate (ItemSlot.OnPointerEnter) uses `Item.UpgradePrice` (full price at the item's current level x 1.5) instead, so a postfix on that getter returns the gap-based cost while the upgrade window exists; before that fix (2026-09-16) an affordable upgrade could show "Not Enough Gold" whenever the vanilla gate exceeded your gold (found in Roguelike with 33,750 gold).
 
 **Removed 2026-09-15:** the "Treasure Chest event" feature. It changed the event's `rarity`, but the game only uses `rarity` to weight *lesser* events; the Treasure Chest events are major events drawn by `ChanceRatio` (1.0, like every other treasure-node event) and already spawn in vanilla. The patch never did anything.
 

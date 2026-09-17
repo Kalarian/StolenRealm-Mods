@@ -1,7 +1,7 @@
 import os, re
 
 ROOT = r"C:/Claude/General/stolen-realm/mods"
-PLUGINS = ["DropRates", "DifficultyXP", "QoL", "TargetTooltip", "SpecialTooltips", "ScalingTooltips", "SharedFortunes", "FortunePreview", "FortuneUpgrade", "LevelSync", "AutoSalvage", "SharedGold", "BattleStats", "ThreatOverlay", "ModMenu", "SharedProgress", "NumberFormat", "BardPreview", "ItemSkillTooltips"]
+PLUGINS = ["DropRates", "DifficultyXP", "QoL", "TargetTooltip", "SpecialTooltips", "ScalingTooltips", "SharedFortunes", "FortunePreview", "FortuneUpgrade", "LevelSync", "AutoSalvage", "SharedGold", "BattleStats", "ThreatOverlay", "ModMenu", "SharedProgress", "NumberFormat", "ItemSkillTooltips", "SellValue", "RoguelikeQoL"]
 
 MASTER = '''using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace {ns}
     internal static class MasterConfig
     {
         public const string FileName = "stolenrealm.mods.cfg";
-        public static readonly string[] AllPlugins = { "DropRates", "DifficultyXP", "QoL", "TargetTooltip", "SpecialTooltips", "ScalingTooltips", "SharedFortunes", "FortunePreview", "FortuneUpgrade", "LevelSync", "AutoSalvage", "SharedGold", "BattleStats", "ThreatOverlay", "ModMenu", "SharedProgress", "NumberFormat", "BardPreview", "ItemSkillTooltips" };
+        public static readonly string[] AllPlugins = { "DropRates", "DifficultyXP", "QoL", "TargetTooltip", "SpecialTooltips", "ScalingTooltips", "SharedFortunes", "FortunePreview", "FortuneUpgrade", "LevelSync", "AutoSalvage", "SharedGold", "BattleStats", "ThreatOverlay", "ModMenu", "SharedProgress", "NumberFormat", "ItemSkillTooltips", "SellValue", "RoguelikeQoL" };
         private static readonly Dictionary<string, bool> _on = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
         private static bool? _verbose;
 
@@ -307,10 +307,12 @@ SPEC = {
                 cleanup="            NumberPatches.Reset();\n"),
     "ItemSkillTooltips": dict(containers="{ typeof(ItemSkillPatches) }",
                 cleanup="            ItemSkillPatches.Reset();\n"),
-    "BardPreview": dict(containers="{ typeof(PreviewPatches) }",
-                updatePre='            if (_patched) { try { PreviewPatches.Tick(); } catch (Exception e) { if (Cfg != null && Cfg.Verbose.Value) Log.LogWarning("Tick: " + e); } }\n',
-                cleanup="            PreviewPatches.Reset();\n            PreviewPatches.DirtySkillCaches(\"mod switched off\");\n",
-                reloadExtra="                PreviewPatches.Refresh();\n"),
+    "SellValue": dict(containers="{ typeof(SellPatches) }",
+                updatePre='            if (_patched) { try { SellPatches.Tick(); } catch (Exception e) { if (Cfg != null && Cfg.Verbose.Value) Log.LogWarning("Tick: " + e); } }\n',
+                cleanup="            SellPatches.Reset();\n"),
+    "RoguelikeQoL": dict(containers="{ typeof(EventPatches), typeof(CurrencyPatches), typeof(RarityPatches) }",
+                cleanup="            EventPatches.Reset();\n            CurrencyPatches.Reset();\n            RarityPatches.Reset();\n",
+                reloadExtra="                EventPatches.Reset();\n"),
     "FortuneUpgrade": dict(containers="{ typeof(UpgradePatches) }",
                 updatePre='            if (_patched) { try { UpgradePatches.Tick(); } catch (Exception e) { if (Cfg != null && Cfg.Verbose.Value) Log.LogWarning("Tick: " + e); } }\n',
                 cleanup="            UpgradePatches.Reset();\n"),

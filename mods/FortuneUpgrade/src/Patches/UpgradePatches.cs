@@ -58,7 +58,7 @@ namespace FortuneUpgrade.Patches
                     if (CanUpgrade(__instance.FortuneSaveData, c, out target, out cost, out why))
                     {
                         _pending = "\n\n<color=#CBB396>" + OptionsManager.Localize("Upgrade") + "</color> " + "to" + " L" + target + ": "
-                            + "<color=#FFFFFF>" + Gold(cost) + "</color> <size=10><sprite name=\"Gold\"></size> <color=#9AA5B1>(" + "press" + " " + cfg.UpgradeKey.Value.MainKey + ")</color>";
+                            + "<color=#FFFFFF>" + Gold(cost) + "</color> " + GoldIcon.Tag(10) + " <color=#9AA5B1>(" + "press" + " " + cfg.UpgradeKey.Value.MainKey + ")</color>";
                     }
                     else if (!string.IsNullOrEmpty(why))
                     {
@@ -115,7 +115,7 @@ namespace FortuneUpgrade.Patches
             }
             ActionStatusInfo info = FortuneWindow.GetFortuneByGuid(data.Guid);
             string name = info != null ? OptionsManager.Localize(info.Name) : data.Guid;
-            string msg = name + "\nL" + data.Level.ToString("0", CultureInfo.InvariantCulture) + " -> L" + target + "\n\n" + "Cost" + ": " + Gold(cost) + " <size=10><sprite name=\"Gold\"></size>";
+            string msg = name + "\nL" + data.Level.ToString("0", CultureInfo.InvariantCulture) + " -> L" + target + "\n\n" + "Cost" + ": " + Gold(cost) + " " + GoldIcon.Tag(10);
             if (ConfirmWindow.Instance == null) { DoUpgrade(c, data, target, cost, name); return; }
             ConfirmWindow.Instance.ShowConfirmMessage("Upgrade Fortune", msg,
                 () => { },

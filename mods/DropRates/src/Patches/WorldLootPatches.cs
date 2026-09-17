@@ -100,7 +100,7 @@ namespace DropRates.Patches
 
             private static void Postfix(List<ItemInfo> __result)
             {
-                if (Cfg.Verbose.Value && __result != null)
+                if (Cfg.Verbose.Value && __result != null && !Cfg.Bypass) // Roguelike's chooser calls this up to 21x per slot; the mod is inert there
                 {
                     DropRatesPlugin.Log.LogInfo("  -> " + (__result.Count == 0 ? "nothing" : string.Join(", ", __result.Select(i => i.ItemName + "(" + i.Rarity + ")").ToArray())));
                 }
