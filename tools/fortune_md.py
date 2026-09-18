@@ -175,7 +175,11 @@ for s in F:
     for t in s.get("SkillTriggers", []):
         Lns.append(f"- Trigger: {clean(trigger_txt(t))}")
     for lk in s.get("SkillChangeLinks", []):
-        Lns.append(f"- Modifies skill: {json.dumps(lk)[:160]}")
+        o = K.get(pid(lk.get("OldSkillInfo"))); n = K.get(pid(lk.get("NewSkillInfo")))
+        if o and n:
+            Lns.append(f"- Replaces skill: {o['SkillName']} -> {n['SkillName']}: {clean(fill(n['Description'], n['DescriptionExpressions']))}")
+        else:
+            Lns.append(f"- Modifies skill: {json.dumps(lk)[:160]}")
     srcs = grants.get(s["_path_id"], [])
     if not srcs:
         Lns.append("- Where: **not granted by any event in the data** (unused)")

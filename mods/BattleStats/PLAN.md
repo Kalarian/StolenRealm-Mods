@@ -50,3 +50,20 @@ Rows appended to the existing stats window (same prefabs, same style), values pe
 Extra stats are stored in the game's own replicated per-character stat dictionary under keys the game does not use, so clients with the mod see them too (host must have the mod for anything to be recorded). Hooks used for display: `StatManager.BuildOutLabels` (add rows) and `StatManager.GetStatDisplay` (add values), which keeps the game's own fill loop in step.
 
 Open questions for the test: how many extra rows fit before the window needs scrolling; whether `StartNewTurn` wraps anything other than tile ticks that should be labelled differently; whether any credit arrives with no ApplyAction context (would log with no skill name).
+
+## Phase 3 (built 2026-09-17): run stats
+
+User request: "a button on the main UI that's always visible that lets me see the battle stats for the entire run ... a
+clone of the current battle stats page but the numbers are cumulative for the run". Built as `src/RunStats.cs` (store +
+merge rules) and `src/Patches/RunStatsPatches.cs` (fold at battle end, reset on leaving town / retry / menu, run mode in
+the same StatManager window with rewritten game rows and redirected mod rows, title, HUD button cloned from the Battle
+Log button, F8). Decisions: totals reset when the next quest starts (readable in town), Roguelike runs count as one run
+(new area keeps counting, retry resets), configurable key. See README "Run stats".
+
+### Phase 3b (built 2026-09-17): run history
+
+User request: "every run saved locally and a way to pull up older runs". `src/RunHistory.cs` (one JSON per run under
+BepInEx\BattleStats\runs, rewritten after each battle, readable summary + raw keys, KeepRuns pruning) and
+`src/RunHistoryWindow.cs` (the run list, built like the mod menu, rows open the Stats window on that run). Saved runs are
+shown by laying their characters onto the window's columns (stand-in Characters, names and numbers from the file).
+

@@ -41,16 +41,27 @@ namespace BattleStats
         /// <summary>Client-side: the abilities behind one bucket for a character, biggest first.</summary>
         public static List<SourceLine> Breakdown(Character c, int bucket)
         {
-            var list = new List<SourceLine>();
             try
             {
                 CharacterBattleStats cbs = EntryFor(c, false);
-                if (cbs == null || cbs.BattleStats == null) return list;
+                if (cbs == null || cbs.BattleStats == null) return new List<SourceLine>();
+                return Breakdown(cbs.BattleStats, bucket);
+            }
+            catch { return new List<SourceLine>(); }
+        }
+
+        /// <summary>The same from any key/value set (the run store).</summary>
+        public static List<SourceLine> Breakdown(IEnumerable<KeyValuePair<int, float>> stats, int bucket)
+        {
+            var list = new List<SourceLine>();
+            try
+            {
+                if (stats == null) return list;
                 int dmgLo = BucketBase + bucket * BucketSpan, dmgHi = dmgLo + BucketSpan;
                 int hitLo = BucketHitsBase + bucket * BucketSpan;
                 var hits = new Dictionary<int, float>();
                 var dmg = new Dictionary<int, float>();
-                foreach (var kv in cbs.BattleStats)
+                foreach (var kv in stats)
                 {
                     if (kv.Key >= dmgLo && kv.Key < dmgHi) dmg[kv.Key - dmgLo] = kv.Value;
                     else if (kv.Key >= hitLo && kv.Key < hitLo + BucketSpan) hits[kv.Key - hitLo] = kv.Value;
@@ -164,13 +175,19 @@ namespace BattleStats
         /// <summary>Client-side: the top list for a character as (name, damage, hits).</summary>
         public static List<Tuple<string, float, int>> TopList(Character c)
         {
+            return TopList(k => Get(c, k));
+        }
+
+        /// <summary>The same from any key lookup (the run store).</summary>
+        public static List<Tuple<string, float, int>> TopList(Func<int, float> get)
+        {
             var list = new List<Tuple<string, float, int>>();
             for (int i = 0; i < TopCount; i++)
             {
-                float code = Get(c, TopSource + i);
-                float dmg = Get(c, TopDamage + i);
+                float code = get(TopSource + i);
+                float dmg = get(TopDamage + i);
                 if (dmg <= 0f) continue;
-                list.Add(Tuple.Create(SourceName((int)code), dmg, (int)Get(c, TopHits + i)));
+                list.Add(Tuple.Create(SourceName((int)code), dmg, (int)get(TopHits + i)));
             }
             return list;
         }

@@ -3,7 +3,8 @@ Stolen Realm mods: QoL + DropRates + DifficultyXP + TargetTooltip + SpecialToolt
                    (BepInEx 5.4.23.5, x64)
 
 See "Stolen Realm Mods - Read Me.pdf" in this zip for the friendly version: one summary page, then a page per mod.
-Easiest install: run "Install Stolen Realm Mods.exe" (finds the game folder, merges your existing settings). The
+Easiest install: run "Install Stolen Realm Mods.exe" (finds the game folder; settings are reset to the shared ones,
+but any mod you switched off stays off). The
 installer checks GitHub each time you run it and installs the newest pack, so keep the exe and just run it again to update.
 Latest version: https://github.com/Kalarian/StolenRealm-Mods/releases/latest
 
@@ -50,6 +51,8 @@ WHAT YOU GET
 
   ON/OFF SWITCHBOARD: press F9 in game (ModMenu), or edit BepInEx\config\stolenrealm.mods.cfg by hand - one true/false
   line per mod, plus one VerboseLogging line for all of them. Detailed settings: BepInEx\config\stolenrealm.*.cfg.
+  Running the installer again to update does NOT turn a mod back on: your true/false choices are carried over, and
+  only mods that are new in the pack arrive switched on.
   VerboseLogging is ON in these configs on purpose for now, so the log is useful if something goes wrong.
 
 MULTIPLAYER

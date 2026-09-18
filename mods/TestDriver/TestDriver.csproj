@@ -34,6 +34,10 @@
       <HintPath>$(GameManaged)\Assembly-CSharp.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(GameManaged)\Newtonsoft.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="Sirenix.Serialization">
       <HintPath>$(GameManaged)\Sirenix.Serialization.dll</HintPath>
       <Private>false</Private>

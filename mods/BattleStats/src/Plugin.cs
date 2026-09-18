@@ -40,7 +40,7 @@ namespace BattleStats
         private void ApplyPatches()
         {
             if (_patched) return;
-            Type[] containers = { typeof(RecorderPatches), typeof(StatsWindowPatches) };
+            Type[] containers = { typeof(RecorderPatches), typeof(StatsWindowPatches), typeof(RunStatsPatches) };
             foreach (Type container in containers)
             {
                 foreach (Type nested in container.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic))
@@ -65,6 +65,7 @@ namespace BattleStats
             if (!_patched) return;
             RecorderPatches.Reset();
             StatsWindowPatches.Reset();
+            RunStatsPatches.Reset();
             int n = _harmony.GetPatchedMethods().Count();
             _harmony.UnpatchSelf();
             _patched = false;
@@ -81,6 +82,8 @@ namespace BattleStats
         private void Update()
         {
             if (_patched) { try { StatsWindowPatches.Tick(); } catch { } }
+            if (_patched) { try { RunStatsPatches.Tick(); } catch (Exception e) { if (Cfg != null && Cfg.Verbose.Value) Log.LogWarning("Run stats tick: " + e); } }
+            if (_patched) { try { RunHistoryWindow.Tick(); } catch (Exception e) { if (Cfg != null && Cfg.Verbose.Value) Log.LogWarning("Run history tick: " + e); } }
             bool reloadKey = Cfg != null && Cfg.ReloadKey.Value.IsDown() && !MasterConfig.MenuPresent; // with the mod menu present, F9 opens the window and Apply reloads
             if (reloadKey || MasterConfig.ReloadRequested(ref _reloadSeen))
             {

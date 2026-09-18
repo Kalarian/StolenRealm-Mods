@@ -70,8 +70,9 @@ namespace BattleStats.Patches
         }
 
         private static string N(float v) { return v.ToString("N0", CultureInfo.InvariantCulture); }
-        private static float G(Character c, int key) { return SharedStats.Get(c, key); }
-        private static float GameStat(Character c, BattleStat s) { return SharedStats.Get(c, (int)s); }
+        // every value the rows show goes through here: the live per-battle dictionary, or the run store while the window is in run mode
+        private static float G(Character c, int key) { return RunStatsPatches.RunMode ? RunStatsPatches.Get(c, key) : SharedStats.Get(c, key); }
+        private static float GameStat(Character c, BattleStat s) { return G(c, (int)s); }
 
         private static List<Row> BuildRows()
         {
@@ -122,8 +123,14 @@ namespace BattleStats.Patches
             return rows;
         }
 
-        /// <summary>True when the host wrote any of our keys for anyone this battle (a host without the mod writes none).</summary>
+        /// <summary>True when the numbers being shown carry any of our keys (a host without the mod writes none): the live battle, or the run store in run mode.</summary>
         private static bool HostHasData()
+        {
+            return RunStatsPatches.RunMode ? RunStatsPatches.HasModKeys() : LiveHostHasData();
+        }
+
+        /// <summary>True when the host wrote any of our keys for anyone this battle.</summary>
+        internal static bool LiveHostHasData()
         {
             try
             {
@@ -200,7 +207,9 @@ namespace BattleStats.Patches
             {
                 try
                 {
-                    if (_rows == null || __result == null || !__instance.UseSections) return;
+                    if (__result == null || !__instance.UseSections) return;
+                    if (RunStatsPatches.RunMode && character != null) RewriteGameRows(__instance, character, __result);
+                    if (_rows == null) return;
                     bool hostData = character == null || HostHasData();
                     string titleOpen = "<size=" + __instance.SectionTitleSize + "><color=#" + ColorUtility.ToHtmlStringRGB(__instance.SectionTitleColor) + ">";
                     string subOpen = "<size=" + __instance.SubSectionSize + "><color=#" + ColorUtility.ToHtmlStringRGB(__instance.SubSectionColor) + ">";
@@ -230,6 +239,36 @@ namespace BattleStats.Patches
                 }
                 catch (Exception e) { BattleStatsPlugin.Log.LogWarning("Stats window values failed: " + e); }
             }
+        }
+
+        /// <summary>Run mode: replace the game's own rows (built by GetStatDisplay from the live dictionary) with the same
+        /// walk over the run store: per section a header holding the sum of the ceiled children, then the children unless
+        /// the section hides them, same size/colour tags. Plain digits (float concatenation would print 1E+07 for a run).</summary>
+        private static void RewriteGameRows(StatManager sm, Character character, List<string> result)
+        {
+            if (sm.StatSections == null) return;
+            var d = RunStatsPatches.ViewFor(character);
+            var rebuilt = new List<string>();
+            string hexT = ColorUtility.ToHtmlStringRGB(sm.SectionTitleColor), hexS = ColorUtility.ToHtmlStringRGB(sm.SubSectionColor);
+            foreach (StatSection sec in sm.StatSections)
+            {
+                float sum = 0f;
+                var kids = new List<string>();
+                if (sec.BattleStats != null)
+                {
+                    foreach (BattleStat bs in sec.BattleStats)
+                    {
+                        float v; d.TryGetValue((int)bs, out v);
+                        v = Mathf.Ceil(v); sum += v;
+                        if (!sec.HideChildren) kids.Add("<size=" + sm.SubSectionSize + "><color=#" + hexS + ">" + v.ToString("0", CultureInfo.InvariantCulture) + "</color></size>");
+                    }
+                }
+                rebuilt.Add("<size=" + sm.SectionTitleSize + "><color=#" + hexT + ">" + sum.ToString("0", CultureInfo.InvariantCulture) + "</color></size>");
+                rebuilt.AddRange(kids);
+            }
+            if (rebuilt.Count != result.Count) { RunStatsPatches.NoteRowMismatch(result.Count, rebuilt.Count); return; }
+            result.Clear();
+            result.AddRange(rebuilt);
         }
 
         // ---------- the scroll view ----------
@@ -348,6 +387,7 @@ namespace BattleStats.Patches
             private static void Postfix(StatManager __instance)
             {
                 try { if (_scroll != null) _scroll.verticalNormalizedPosition = 1f; } catch { }
+                RunStatsPatches.ApplyTitle(__instance);
                 if (Cfg != null && Cfg.DebugHooks.Value) _dumpCountdown = 3;
             }
         }
@@ -383,6 +423,20 @@ namespace BattleStats.Patches
                 BattleStatsPlugin.Log.LogInfo("Stats window dump: end (" + lines + " nodes)");
             }
             catch (Exception e) { BattleStatsPlugin.Log.LogWarning("Stats window dump failed: " + e); }
+        }
+
+        /// <summary>Log any UI subtree once (used for the HUD button row with DebugHooks on).</summary>
+        internal static void DumpHierarchy(Transform root, string tag)
+        {
+            if (root == null) return;
+            try
+            {
+                int lines = 0;
+                BattleStatsPlugin.Log.LogInfo(tag + " dump: root " + PathOf(root));
+                DumpNode(root, 0, new Dictionary<Transform, string>(), ref lines);
+                BattleStatsPlugin.Log.LogInfo(tag + " dump: end (" + lines + " nodes)");
+            }
+            catch (Exception e) { BattleStatsPlugin.Log.LogWarning(tag + " dump failed: " + e); }
         }
 
         private static void DumpNode(Transform t, int depth, Dictionary<Transform, string> known, ref int lines)
@@ -425,6 +479,7 @@ namespace BattleStats.Patches
             {
                 try
                 {
+                    RunStatsPatches.ApplyHistoryNames(__instance);   // a saved run names its own columns
                     if (Cfg == null || !Cfg.Enabled.Value || !Cfg.ShowInWindow.Value) return;
                     if (_scroll != null) _scroll.verticalNormalizedPosition = 1f;
                     if (!Cfg.TopSkillsTooltip.Value || __instance.StatCharacterNameHolder == null || characters == null) return;
@@ -487,7 +542,7 @@ namespace BattleStats.Patches
                 {
                     if (Bucket < 0 || Character == null || Cfg == null || !Cfg.Enabled.Value || !Cfg.CellTooltips.Value || GUIManager.instance == null || GUIManager.instance.tooltip == null) return;
                     if (!HostHasData()) return;
-                    var lines = SharedStats.Breakdown(Character, Bucket);
+                    var lines = RunStatsPatches.RunMode ? SharedStats.Breakdown(RunStatsPatches.ViewFor(Character), Bucket) : SharedStats.Breakdown(Character, Bucket);
                     float total = 0f; foreach (var l in lines) total += l.Damage;
                     int max = Cfg.TopSkills.Value;
                     var sb = new System.Text.StringBuilder();
@@ -499,7 +554,7 @@ namespace BattleStats.Patches
                     }
                     if (lines.Count > max) sb.Append("<color=#9AA5B1>... and ").Append(lines.Count - max).Append(" more</color>");
                     string body = lines.Count == 0 ? "No damage in this section." : sb.ToString().TrimEnd('\n');
-                    GUIManager.instance.tooltip.ShowUniversalTooltip(Character.CharacterName, Label + ": " + N(total), body);
+                    GUIManager.instance.tooltip.ShowUniversalTooltip(RunStatsPatches.DisplayName(Character), Label + ": " + N(total), body);
                 }
                 catch { }
             }
@@ -520,10 +575,10 @@ namespace BattleStats.Patches
                 try
                 {
                     if (Character == null || Cfg == null || !Cfg.Enabled.Value || !Cfg.TopSkillsTooltip.Value || GUIManager.instance == null || GUIManager.instance.tooltip == null) return;
-                    var top = SharedStats.TopList(Character);
+                    var top = RunStatsPatches.RunMode ? SharedStats.TopList(k => RunStatsPatches.Get(Character, k)) : SharedStats.TopList(Character);
                     string body = top.Count == 0 ? "No damage recorded." : string.Join("\n", top.Select(t => "<color=#CBB396>" + N(t.Item2) + "</color>  " + t.Item1 + " <color=#9AA5B1>(" + t.Item3 + (t.Item3 == 1 ? " hit" : " hits") + ")</color>").ToArray());
-                    float total = SharedStats.Get(Character, (int)BattleStat.DamageDealt);
-                    GUIManager.instance.tooltip.ShowUniversalTooltip(Character.CharacterName, total > 0 ? N(total) + " damage - top sources" : "Top damage sources", body);
+                    float total = G(Character, (int)BattleStat.DamageDealt);
+                    GUIManager.instance.tooltip.ShowUniversalTooltip(RunStatsPatches.DisplayName(Character), total > 0 ? N(total) + " damage - top sources" : "Top damage sources", body);
                 }
                 catch { }
             }

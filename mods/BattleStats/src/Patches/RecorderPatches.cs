@@ -158,9 +158,14 @@ namespace BattleStats.Patches
         {
             private static void Prefix(bool victory)
             {
-                if (!On || _battle == null) return;
-                try { FinishBattle(victory); }
-                catch (Exception e) { BattleStatsPlugin.Log.LogWarning("Battle summary failed: " + e); }
+                if (On && _battle != null)
+                {
+                    try { FinishBattle(victory); }
+                    catch (Exception e) { BattleStatsPlugin.Log.LogWarning("Battle summary failed: " + e); }
+                }
+                // the run totals fold after the recorder wrote its last numbers; also on a client, where _battle is never set
+                try { RunStatsPatches.OnBattleEnded(victory); }
+                catch (Exception e) { BattleStatsPlugin.Log.LogWarning("Run stats fold failed: " + e); }
             }
         }
 

@@ -184,6 +184,32 @@ Host the session yourself (recording happens where the battle is resolved). The 
 - [x] Set `ShowElements = false`, F9, open Stats: the element section is gone, the others intact. Set `BattleStats = false` in the master file, F9, open Stats: vanilla window. Back to true, F9: rows return.
 - [x] Co-op with a modded friend, **you host**: their Stats window shows the same numbers as yours. **They host**: same. Friend without the mod hosting: your rows show `n/a`, nothing breaks for them.
 
+### Run stats (added 2026-09-17)
+- [ ] In town before any quest: a solid **Run Stats** button sits under the gold and difficulty box at the top right, the same widget as the post-battle Stats button. Clicking it (or F8) opens the **run history list**, because this run has no battles yet.
+- [ ] The button is there in town, on the island and in battle, sitting just under the gold and difficulty box, and it disappears the moment any window opens (character sheet, skill tree, inventory, quest map, shop, an event, the pause menu, the stats page itself) and while a loading screen or the post-battle screen is up. `RunStatsButtonGap` moves it further down if it touches the box.
+- [ ] After one battle on the island: the button is live; click it (or F8): the Stats window opens titled **Run Stats - 1 battle** with exactly the values the post-battle Stats page showed. Hover a name and a damage cell: the tooltips match. Close with the button and with Escape: both work, and the post-battle Stats button afterwards says **Battle Stats** with per-battle values.
+- [ ] After a second battle: **Run Stats - 2 battles**; every sum row (the game's rows, Damage Breakdown, Hits / Crits, Kills / Overkill, elements, Activity) is the sum of the two fights; **Biggest Hit** is the larger of the two with its skill; **Best Skill** is the run-wide leader; **Damage Per Turn** = total / all turns.
+- [ ] Open the page in the middle of a fight: title ends with **+ current** and the numbers include the fight so far; open again a turn later: they grew.
+- [ ] Finish the quest and return to town: the button still works and shows the finished run. Leave town for the next quest: the page is empty again (button greyed). Lose a fight and pick **Retry**: also empty.
+- [ ] Roguelike: the button and page work with no town involved, and the totals keep adding across areas. The history row says **Roguelike** and the area the run reached.
+- [ ] Roguelike: finish or lose a run. Its file is closed (the log says so) and the totals stay readable until you start the next run; a retry with the same setup starts from zero.
+- [ ] Roguelike: quit mid-run, come back to the same run: the totals carry on, as in a campaign quest. Starting a different Roguelike run instead does not inherit them.
+- [ ] Roguelike with `RoguelikeAreaResets = true`, F9: each new area starts its own set of totals.
+- [ ] Co-op as client with a modded host: your run page equals the host's. Host without the mod: the game's rows add up, the mod's rows say `n/a`.
+- [ ] `BattleStats = false` in the master file, F9: button gone, F8 dead; back to true, F9: both return. `RunStatsButton = false`, F9: button gone, F8 still works.
+
+### Run history (added 2026-09-17)
+- [ ] After a battle, look in `BepInEx\BattleStats\runs`: a `run-<date>.json` appeared. Open it in a text editor: the header names the difficulty and quest, `battles` and `wins` match what you played, and each character has a readable `summary` (damage, healing, kills, biggest hit, best skill).
+- [ ] Fight another battle: the same file is updated, not a second one. Leave town for a new quest and fight: a second file appears.
+- [ ] Press **F7** (or the **History** button beside Close in the run stats window): the run list opens, newest first, with the run in progress at the top and highlighted. Each row shows date, battles, difficulty, quest, then the party and totals.
+- [ ] Click an older run: the Stats window shows that run's numbers with **that run's character names** in the column headers and its date in the title. The list closes itself when you pick a run, so Escape from the page goes straight back to the game.
+- [ ] Click the current run: it opens the live page (with "+ current" if a battle is running).
+- [ ] The history opens in town, on the island and in battle, and the game is not interactable behind it.
+- [ ] Set `KeepRuns = 3`, play until there are four runs: the oldest file is deleted and the list shows three. `SaveRuns = false`, F9: no new files are written (the list still shows the old ones).
+- [ ] **Quit in the middle of a quest** (two or three battles in), close the game, start it again and carry on with the same quest: the RUN page still shows those battles and the next fight adds to them, not to a new run. The log says `Run stats: resumed run-<date>.json`. Finish or abandon the quest, start a new one, and the totals are empty again.
+- [ ] Quit mid-quest, come back and load a **different** character or party instead: the run is not picked up (it belongs to the other party), and going back to the first one still finds it.
+- [ ] Delete a file by hand while the game runs and press F7: the list no longer shows it and nothing breaks. Put a broken .json in the folder: it is skipped with a warning in the log, the rest of the list is fine.
+
 ### Log
 - [x] `===== BATTLE START` / `===== BATTLE SUMMARY (...)` around the fight; each character's summary damage equals their `GAME'S OWN TOTALS DamageDealt`.
 - [x] **Poison (The Bad Bloom, Poison Cloud, Poisoned Dagger...):** the game makes the victim poison itself, so vanilla credits nobody (or the poisoned player). The log now shows `POISON t<n> <victim> takes N from its stacks [Test1x6 ...]` followed by HIT lines crediting the poisoners as `[StatusTick: Poisoned]`; Test1's Damage Dealt and Over Time rows include the Bad Bloom poison; a poisoned player's own Damage Dealt does NOT grow from their poison.

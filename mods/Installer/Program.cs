@@ -23,7 +23,9 @@ namespace Installer
     /// with the pack's copies by default (the friends never edit them, so every install lands on the pack's settings);
     /// with "keep" (the checkbox) they are merged instead: every value the player already has is kept, every setting
     /// the pack has that the player's file lacks is added with the pack's value (with its comment), and settings the
-    /// pack no longer has are left in place (BepInEx ignores them). The master switchboard follows the same rule.
+    /// pack no longer has are left in place (BepInEx ignores them).
+    /// The switchboard is the exception to the replace rule: which mods a player has switched off is their own choice,
+    /// so those values are always carried over. Only mods that are new in the pack arrive switched on.
     /// </summary>
     internal static class Program
     {
@@ -124,6 +126,20 @@ namespace Installer
                             int n = MergeConfig(dest, shipped);
                             merged++; mergedKeys += n;
                             if (n > 0) log.AppendLine("  " + Path.GetFileName(dest) + ": added " + n + " new setting(s), kept yours");
+                            continue;
+                        }
+                        // The switchboard is the one config that is not purely a shared setting: which mods a player has
+                        // switched off is their own choice, so those values are carried across even when everything else
+                        // is replaced. A mod the pack adds arrives switched on.
+                        if (isCfg && existed && entry.FullName.Equals(MasterCfg, StringComparison.OrdinalIgnoreCase))
+                        {
+                            string shippedMaster;
+                            using (var r = new StreamReader(entry.Open(), Encoding.UTF8)) shippedMaster = r.ReadToEnd();
+                            var stillOff = new List<string>();
+                            MergeSwitchboard(dest, shippedMaster, stillOff);
+                            replaced++;
+                            log.AppendLine("  " + Path.GetFileName(dest) + ": updated, your mod on/off choices kept"
+                                + (stillOff.Count > 0 ? " (still off: " + string.Join(", ", stillOff.ToArray()) + ")" : ""));
                             continue;
                         }
                         if (isCfg && existed) resetCfg++;
@@ -338,6 +354,52 @@ namespace Installer
 
         private static bool LooksLikeKeyComment(string t) { return t.StartsWith("##") || t.StartsWith("# Setting type") || t.StartsWith("# Default value") || t.StartsWith("# Acceptable"); }
 
+        /// <summary>Write the pack's switchboard but keep the player's own on/off values for the mods they already have.
+        /// VerboseLogging is a shared setting rather than a choice, so the pack's value wins; a mod that is new in the
+        /// pack arrives with the pack's value (on). Returns how many lines kept a value that differs from the pack, and
+        /// fills `stillOff` with the mods the player has switched off.</summary>
+        public static int MergeSwitchboard(string userPath, string shippedText, List<string> stillOff)
+        {
+            var mine = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (string line in File.ReadAllText(userPath, Encoding.UTF8).Replace("\r\n", "\n").Split('\n'))
+            {
+                string t = line.Trim();
+                if (t.Length == 0 || t.StartsWith("#")) continue;
+                int eq = t.IndexOf('=');
+                if (eq <= 0) continue;
+                string key = t.Substring(0, eq).Trim(), val = t.Substring(eq + 1).Trim();
+                if (key.Equals("VerboseLogging", StringComparison.OrdinalIgnoreCase)) continue;
+                if (!val.Equals("true", StringComparison.OrdinalIgnoreCase) && !val.Equals("false", StringComparison.OrdinalIgnoreCase)) continue;
+                mine[key] = val.ToLowerInvariant();
+            }
+            var outLines = new List<string>();
+            int kept = 0;
+            foreach (string raw in shippedText.Replace("\r\n", "\n").Split('\n'))
+            {
+                string line = raw.TrimEnd('\r');
+                string t = line.Trim();
+                int eq = t.IndexOf('=');
+                if (t.Length > 0 && !t.StartsWith("#") && eq > 0)
+                {
+                    string key = t.Substring(0, eq).Trim();
+                    string val;
+                    if (!key.Equals("VerboseLogging", StringComparison.OrdinalIgnoreCase) && mine.TryGetValue(key, out val))
+                    {
+                        if (!t.Substring(eq + 1).Trim().Equals(val, StringComparison.OrdinalIgnoreCase))
+                        {
+                            kept++;
+                            if (val == "false" && stillOff != null) stillOff.Add(key);
+                        }
+                        outLines.Add(key + " = " + val);
+                        continue;
+                    }
+                }
+                outLines.Add(line);
+            }
+            File.WriteAllText(userPath, string.Join(Environment.NewLine, outLines.ToArray()), new UTF8Encoding(false));
+            return kept;
+        }
+
         /// <summary>Add every (section,key) the shipped file has and the user's file lacks, keeping the user's file otherwise. Returns how many were added.</summary>
         public static int MergeConfig(string userPath, string shippedText)
         {
@@ -472,7 +534,7 @@ namespace Installer
 
             _keep.Text = "Keep the mod settings I edited by hand (merge instead of replace)";
             _keep.AutoSize = true; _keep.Location = new Point(18, 136);
-            var note = new Label { Text = "Unchecked (recommended): every mod config file is replaced with the pack's copy, so you get exactly the shared settings.", AutoSize = true, Location = new Point(36, 158), ForeColor = Color.DimGray, Font = new Font("Segoe UI", 8.5f) };
+            var note = new Label { Text = "Unchecked (recommended): every mod config file is replaced with the pack's copy, so you get exactly the shared settings. Mods you switched off stay off either way.", AutoSize = true, Location = new Point(36, 158), ForeColor = Color.DimGray, Font = new Font("Segoe UI", 8.5f) };
 
             _install.Text = "Install / Update"; _install.SetBounds(18, 190, 150, 34); _install.Font = new Font("Segoe UI", 10f, FontStyle.Bold);
             _install.Click += (s, e) => Run(false);
